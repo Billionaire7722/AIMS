@@ -1,0 +1,18 @@
+{
+  "name": "aims-monorepo",
+  "private": true,
+  "scripts": {
+    "dev:web": "npm run dev --prefix apps/web",
+    "dev:api": "npm run dev --prefix apps/api",
+    "dev:transcriber": "npm run dev --prefix services/transcriber",
+    "prisma:generate": "npm run prisma:generate --prefix apps/api",
+    "prisma:migrate": "npm run prisma:migrate --prefix apps/api",
+    "build:web": "npm run build --prefix apps/web",
+    "build:api": "npm run build --prefix apps/api",
+    "build": "npm run build:api && npm run build:web",
+    "e2e:smoke": "node scripts/local-e2e.mjs",
+    "typecheck:web": "npm run typecheck --prefix apps/web",
+    "typecheck:api": "npm run typecheck --prefix apps/api",
+    "typecheck": "npm run typecheck:api && npm run typecheck:web"
+  }
+}

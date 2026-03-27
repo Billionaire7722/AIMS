@@ -1,0 +1,10 @@
+{
+  "name": "@aims/transcriber",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "python -m app.main",
+    "start": "python -m app.main",
+    "typecheck": "python -m compileall app"
+  }
+}

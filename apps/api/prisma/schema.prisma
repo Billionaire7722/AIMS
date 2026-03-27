@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String                @id @default(uuid())
+  email        String                @unique
+  passwordHash String
+  displayName  String?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  projects     Project[]
+  uploads      Upload[]
+  jobs         TranscriptionJob[]
+  feedback     AnalysisFeedback[]
+}
+
+model Project {
+  id          String                @id @default(uuid())
+  ownerId     String
+  name        String
+  description String?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  owner       User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  uploads     Upload[]
+  jobs        TranscriptionJob[]
+  results    TranscriptionResult[]
+  feedback    AnalysisFeedback[]
+}
+
+model Upload {
+  id              String              @id @default(uuid())
+  userId          String
+  projectId       String
+  originalName    String
+  storedName      String
+  storagePath     String              @unique
+  mimeType        String
+  sizeBytes       Int
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project         Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  jobs            TranscriptionJob[]
+}
+
+model TranscriptionJob {
+  id               String              @id @default(uuid())
+  userId           String
+  projectId        String
+  uploadId         String              @unique
+  mode             String
+  status           String
+  progress         Int                 @default(0)
+  transcriberJobId  String?
+  errorMessage     String?
+  requestedAt      DateTime            @default(now())
+  startedAt        DateTime?
+  finishedAt       DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project          Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  upload           Upload              @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+  result           TranscriptionResult?
+  editedScore      EditedScore?
+  assets           SheetAsset[]
+  feedback         AnalysisFeedback[]
+}
+
+model TranscriptionResult {
+  id                String             @id @default(uuid())
+  jobId             String             @unique
+  projectId         String
+  tempoBpm          Float
+  timeSignature     String
+  highestNote       String
+  lowestNote        String
+  repeatedSections  String[]
+  benchmark         Json
+  notesCount        Int
+  rawNotesPath      String?
+  selectedMode      String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  job               TranscriptionJob   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  project           Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assets            SheetAsset[]
+  feedback          AnalysisFeedback[]
+}
+
+model SheetAsset {
+  id             String              @id @default(uuid())
+  resultId       String
+  jobId          String
+  mode           String
+  assetType      String
+  storagePath    String
+  mimeType       String
+  downloadName   String
+  byteSize       Int
+  metadata       Json?
+  createdAt      DateTime            @default(now())
+  result         TranscriptionResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  job            TranscriptionJob    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId, mode])
+}
+
+model AnalysisFeedback {
+  id          String             @id @default(uuid())
+  userId      String?
+  projectId   String?
+  jobId       String
+  resultId    String?
+  rating      Int
+  comment     String?
+  issueTags   String[]
+  createdAt   DateTime           @default(now())
+  user        User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project     Project?           @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  job         TranscriptionJob   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  result      TranscriptionResult? @relation(fields: [resultId], references: [id], onDelete: SetNull)
+
+  @@index([jobId])
+}
+
+model EditedScore {
+  id           String            @id @default(uuid())
+  jobId        String            @unique
+  scoreJson    Json
+  musicxmlPath String?
+  midiPath     String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  job          TranscriptionJob   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
