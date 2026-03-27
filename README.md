@@ -91,6 +91,8 @@ Copy the env templates and fill them in for your machine:
 - [services/transcriber/.env.example](/D:/AIMS/services/transcriber/.env.example)
 - [apps/web/.env.example](/D:/AIMS/apps/web/.env.example)
 
+The root `.env` is local-only and must never be committed.
+
 ### API env
 
 `apps/api/.env` should define:

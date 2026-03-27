@@ -14,6 +14,7 @@ _aria_utils_tmp/
 .smoke-assets/
 generated-assets/
 uploads/
+apps/api/storage/
 **/.venv/
 apps/**/node_modules/
 apps/**/dist/
