@@ -3,6 +3,7 @@ import type { CSSProperties, PointerEvent } from "react";
 import type { EditableScoreResponse, ScoreHand, ScoreNote, TranscriptionResultResponse } from "@aims/shared-types";
 import { measureLengthBeats, scoreToPlaybackEvents, scientificPitchToMidi } from "@aims/music-domain";
 import { saveEditableScore } from "./api";
+import { MeasureNotation } from "./MeasureNotation";
 import {
   DURATION_OPTIONS,
   addMeasureAfter,
@@ -466,7 +467,7 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
     setSelectedMeasure(measureNumber);
   }
 
-function handleLanePointerDown(measureNumber: number, hand: ScoreHand, event: PointerEvent<HTMLDivElement>) {
+  function handleLanePointerDown(measureNumber: number, hand: ScoreHand, event: PointerEvent<SVGRectElement>) {
     event.preventDefault();
     const measure = scoreRef.current.measures.find((item) => item.number === measureNumber);
     if (!measure) return;
@@ -878,80 +879,16 @@ function handleLanePointerDown(measureNumber: number, hand: ScoreHand, event: Po
                       {measure.barline !== "single" ? measure.barline : measure.repeatStart ? "repeat start" : measure.repeatEnd ? "repeat end" : "single"}
                     </span>
                   </button>
-
-                  <div className="grand-staff">
-                    <div role="button" tabIndex={0} className="staff-lane rh" onPointerDown={(event) => handleLanePointerDown(measure.number, "rh", event)}>
-                      <span className="staff-label">RH</span>
-                      {groupNotes(measure.rightHandNotes).map((group) => {
-                        const clusterSelected = group.notes.some((note) => note.id === selectedNoteId);
-                        return (
-                          <div
-                            key={`rh-${measure.number}-${group.startBeat}`}
-                            className={`note-cluster ${clusterSelected ? "selected" : ""}`}
-                            style={{ left: `${notePositionPercent(group.notes[0], measure.beatsPerMeasure)}%` } as CSSProperties}
-                          >
-                            {group.notes.map((note, index) => (
-                              <button
-                                key={note.id}
-                                type="button"
-                                className={`note-chip ${note.source} ${note.isRest ? "rest" : ""} ${note.id === selectedNoteId ? "selected" : ""}`}
-                                style={{ top: `${noteHeightPercent(note, index, group.notes.length)}%` } as CSSProperties}
-                                onPointerDown={(event) => event.stopPropagation()}
-                                onClick={() => handleSelectNote(note.id, note.measureNumber)}
-                                title={`${note.pitch} | ${note.durationBeats} beats | ${note.source === "ai" ? "AI" : "User"}`}
-                              >
-                                <span>
-                                  {note.isRest
-                                    ? "Rest"
-                                    : pitchFromMidi(
-                                        note.midiValue,
-                                        note.accidental === "sharp" || note.accidental === "flat" ? note.accidental : "natural",
-                                      )}
-                                </span>
-                                <small>{getDurationLabel(note.durationBeats)}</small>
-                              </button>
-                            ))}
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div role="button" tabIndex={0} className="staff-lane lh" onPointerDown={(event) => handleLanePointerDown(measure.number, "lh", event)}>
-                      <span className="staff-label">LH</span>
-                      {groupNotes(measure.leftHandNotes).map((group) => {
-                        const clusterSelected = group.notes.some((note) => note.id === selectedNoteId);
-                        return (
-                          <div
-                            key={`lh-${measure.number}-${group.startBeat}`}
-                            className={`note-cluster ${clusterSelected ? "selected" : ""}`}
-                            style={{ left: `${notePositionPercent(group.notes[0], measure.beatsPerMeasure)}%` } as CSSProperties}
-                          >
-                            {group.notes.map((note, index) => (
-                              <button
-                                key={note.id}
-                                type="button"
-                                className={`note-chip ${note.source} ${note.isRest ? "rest" : ""} ${note.id === selectedNoteId ? "selected" : ""}`}
-                                style={{ top: `${noteHeightPercent(note, index, group.notes.length)}%` } as CSSProperties}
-                                onPointerDown={(event) => event.stopPropagation()}
-                                onClick={() => handleSelectNote(note.id, note.measureNumber)}
-                                title={`${note.pitch} | ${note.durationBeats} beats | ${note.source === "ai" ? "AI" : "User"}`}
-                              >
-                                <span>
-                                  {note.isRest
-                                    ? "Rest"
-                                    : pitchFromMidi(
-                                        note.midiValue,
-                                        note.accidental === "sharp" || note.accidental === "flat" ? note.accidental : "natural",
-                                      )}
-                                </span>
-                                <small>{getDurationLabel(note.durationBeats)}</small>
-                              </button>
-                            ))}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <MeasureNotation
+                    score={score}
+                    measure={measure}
+                    selectedNoteId={selectedNoteId}
+                    tool={tool}
+                    duration={duration}
+                    accidentalPreference={accidentalPreference}
+                    onSelectNote={handleSelectNote}
+                    onLanePointerDown={handleLanePointerDown}
+                  />
                 </article>
               );
             })}

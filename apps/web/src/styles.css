@@ -456,6 +456,7 @@ h1 {
   background: rgba(255, 255, 255, 0.58);
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: var(--shadow-soft);
+  overflow: hidden;
 }
 
 .measure-card.selected {
@@ -488,118 +489,183 @@ h1 {
   text-transform: lowercase;
 }
 
-.grand-staff {
-  display: grid;
-  gap: 0.7rem;
+.notation-wrap {
+  margin-top: 0.25rem;
+  padding: 0.55rem 0.6rem 0.25rem;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.24)),
+    rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.staff-lane {
-  position: relative;
+.notation-svg {
   display: block;
   width: 100%;
-  min-height: 124px;
-  padding: 0.9rem 0.8rem 0.9rem 3.5rem;
-  border-radius: 18px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 18px,
-      rgba(25, 22, 20, 0.12) 19px,
-      rgba(25, 22, 20, 0.12) 20px
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.54));
-  text-align: left;
-  color: var(--text);
+  height: auto;
+}
+
+.notation-backdrop {
+  fill: transparent;
+}
+
+.beat-grid {
+  stroke: rgba(28, 21, 17, 0.08);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+}
+
+.beat-grid.downbeat {
+  stroke: rgba(28, 21, 17, 0.14);
+}
+
+.beat-label {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.staff-line {
+  stroke: rgba(28, 21, 17, 0.72);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+}
+
+.staff-label-notation {
+  fill: rgba(28, 21, 17, 0.55);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.staff-brace {
+  fill: none;
+  stroke: rgba(28, 21, 17, 0.65);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.barline {
+  stroke: rgba(28, 21, 17, 0.84);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.barline.repeat {
+  stroke-width: 4.5;
+}
+
+.barline.repeat-thin {
+  stroke-width: 1.4;
+}
+
+.repeat-dot {
+  fill: rgba(28, 21, 17, 0.88);
+}
+
+.staff-hit-area {
   cursor: crosshair;
-  overflow: hidden;
 }
 
-.staff-lane.rh {
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+.notation-wrap.tool-delete .staff-hit-area {
+  cursor: not-allowed;
 }
 
-.staff-lane.lh {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+.note-group {
+  cursor: pointer;
 }
 
-.staff-lane.tool-active {
-  outline: 2px solid rgba(37, 92, 87, 0.22);
+.note-group:focus {
+  outline: none;
 }
 
-.staff-label {
-  position: absolute;
-  left: 0.85rem;
-  top: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.2rem;
-  padding: 0.35rem 0.5rem;
-  border-radius: 999px;
-  background: rgba(37, 92, 87, 0.12);
-  color: var(--accent-strong);
-  font-size: 0.76rem;
+.ledger-line {
+  stroke: rgba(28, 21, 17, 0.82);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.stem {
+  stroke: rgba(28, 21, 17, 0.9);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.beam {
+  fill: rgba(28, 21, 17, 0.92);
+  stroke: rgba(28, 21, 17, 0.92);
+  stroke-width: 1;
+}
+
+.beam.stub {
+  fill: none;
+  stroke-width: 2.2;
+}
+
+.tie-path {
+  fill: none;
+  stroke: rgba(28, 21, 17, 0.88);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.notehead {
+  stroke: rgba(28, 21, 17, 0.95);
+  stroke-width: 1.4;
+}
+
+.notehead.source-ai {
+  fill: #f5fbf8;
+}
+
+.notehead.source-user {
+  fill: #fff2e8;
+}
+
+.notehead.open {
+  fill: #fffdf9;
+}
+
+.notehead.selected {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.accidental-glyph {
+  fill: rgba(28, 21, 17, 0.86);
+  font-size: 18px;
+  font-family: "Bravura", "Noto Music", "Arial Unicode MS", serif;
   font-weight: 700;
 }
 
-.note-cluster {
-  position: absolute;
-  top: 0.6rem;
-  bottom: 0.6rem;
-  width: 0;
-  pointer-events: none;
+.accidental-glyph.source-ai {
+  fill: var(--accent);
 }
 
-.note-cluster.selected {
-  z-index: 2;
+.accidental-glyph.source-user {
+  fill: var(--accent-warm);
 }
 
-.note-chip {
-  position: absolute;
-  left: 0;
-  transform: translateX(-50%);
-  width: 92px;
-  min-height: 42px;
-  padding: 0.45rem 0.55rem;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: #fffdf7;
-  color: var(--text);
-  box-shadow: 0 6px 18px rgba(35, 24, 16, 0.12);
-  pointer-events: auto;
+.rest-symbol {
+  fill: rgba(28, 21, 17, 0.88);
+  font-size: 28px;
+  font-family: "Bravura", "Noto Music", "Arial Unicode MS", serif;
+  font-weight: 700;
 }
 
-.note-chip.ai {
-  background: rgba(37, 92, 87, 0.12);
+.rest-group.source-ai .rest-symbol {
+  fill: var(--accent);
 }
 
-.note-chip.user {
-  background: rgba(200, 108, 74, 0.12);
+.rest-group.source-user .rest-symbol {
+  fill: var(--accent-warm);
 }
 
-.note-chip.rest {
-  border-style: dashed;
-  color: var(--muted);
-}
-
-.note-chip.selected {
-  border-color: rgba(37, 92, 87, 0.5);
-  box-shadow: 0 0 0 2px rgba(37, 92, 87, 0.1), 0 8px 18px rgba(35, 24, 16, 0.15);
-}
-
-.note-chip span,
-.note-chip small {
-  display: block;
-  line-height: 1.1;
-}
-
-.note-chip small {
-  margin-top: 0.18rem;
-  color: var(--muted);
+.notation-wrap.tool-note .staff-hit-area,
+.notation-wrap.tool-rest .staff-hit-area {
+  cursor: crosshair;
 }
 
 .transport-bar {
