@@ -1,11 +1,12 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
 import { Worker } from "bullmq";
-import { PrismaService } from "../../prisma/prisma.service.js";
+import { Model } from "mongoose";
+import { TranscriptionJobEntity, type TranscriptionJobDocument, UploadEntity, type UploadDocument } from "../../database/mongo.schemas.js";
 import { LocalStorageService } from "../../storage/storage.service.js";
 import { TranscriberClientService } from "../../transcriber/transcriber-client.service.js";
-import fs from "node:fs/promises";
-import path from "node:path";
 import { getAppEnv } from "../../runtime/app-env.js";
+import { ScoreDocumentsService } from "../results/score-documents.service.js";
 
 @Injectable()
 export class TranscriptionWorkerService implements OnModuleInit, OnModuleDestroy {
@@ -13,9 +14,11 @@ export class TranscriptionWorkerService implements OnModuleInit, OnModuleDestroy
   private worker?: Worker<{ jobId: string }>;
 
   constructor(
-    private readonly prisma: PrismaService,
+    @InjectModel(TranscriptionJobEntity.name) private readonly jobs: Model<TranscriptionJobDocument>,
+    @InjectModel(UploadEntity.name) private readonly uploads: Model<UploadDocument>,
     private readonly storage: LocalStorageService,
     private readonly transcriberClient: TranscriberClientService,
+    private readonly scoreDocuments: ScoreDocumentsService,
   ) {}
 
   async onModuleInit() {
@@ -42,165 +45,137 @@ export class TranscriptionWorkerService implements OnModuleInit, OnModuleDestroy
   }
 
   private async process(jobId: string) {
-    const job = await this.prisma.transcriptionJob.findUnique({
-      where: { id: jobId },
-      include: { upload: true },
-    });
+    const job = await this.jobs.findById(jobId);
     if (!job) {
       throw new Error(`Transcription job ${jobId} not found.`);
     }
-    const uploadPath = await this.storage.resolveUploadPath(job.upload.storagePath);
+
+    const upload = await this.uploads.findById(job.uploadId).lean();
+    if (!upload) {
+      throw new Error(`Upload ${job.uploadId} not found for job ${jobId}.`);
+    }
+
+    const uploadPath = await this.storage.resolveUploadFile(upload.storagePath);
     const generatedRoot = this.storage.resolveGeneratedPath("");
-    const jobOutputDir = path.join(generatedRoot, job.id);
-    await this.updateJob(job.id, { status: "processing", progress: 10, startedAt: new Date() });
+
+    await this.updateJob(jobId, {
+      status: "processing",
+      progress: 10,
+      startedAt: new Date(),
+      errorMessage: null,
+    });
+
     try {
       const startResponse = await this.transcriberClient.startJob({
-        jobId: job.id,
+        jobId: job._id,
         uploadPath,
-        uploadFileName: job.upload.originalName,
+        uploadFileName: upload.originalName,
         outputRoot: generatedRoot,
         mode: job.mode,
       });
-      await this.updateJob(job.id, {
+
+      await this.updateJob(jobId, {
         transcriberJobId: startResponse.id,
         progress: 15,
         status: "processing",
       });
+
       while (true) {
         const status = await this.transcriberClient.getJobStatus(startResponse.id);
-        await this.updateJob(job.id, {
+        await this.updateJob(jobId, {
           status: status.status,
           progress: status.progress,
           errorMessage: status.errorMessage ?? null,
         });
+
         if (status.status === "completed") {
           if (!status.result) {
             throw new Error("Transcriber completed without a result payload.");
           }
-          await this.persistResult(job.id, status.result, jobOutputDir);
-          await this.updateJob(job.id, {
+          await this.persistResult(jobId, status.result);
+          await this.updateJob(jobId, {
             status: "completed",
             progress: 100,
             finishedAt: new Date(),
           });
           return status.result;
         }
+
         if (status.status === "failed") {
           throw new Error(status.errorMessage ?? "Transcriber job failed.");
         }
+
         await this.delay(2000);
       }
-    } finally {
-      await fs.rm(uploadPath, { force: true }).catch(() => undefined);
-      await fs.rm(jobOutputDir, { recursive: true, force: true }).catch(() => undefined);
+    } catch (error) {
+      await this.updateJob(jobId, {
+        status: "failed",
+        progress: 100,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        finishedAt: new Date(),
+      });
+      throw error;
     }
   }
 
-  private async persistResult(jobId: string, result: any, jobOutputDir: string) {
-    const job = await this.prisma.transcriptionJob.findUnique({
-      where: { id: jobId },
-      include: { upload: true },
-    });
+  private async persistResult(jobId: string, result: any) {
+    const job = await this.jobs.findById(jobId);
     if (!job) {
       throw new Error(`Transcription job ${jobId} not found when persisting results.`);
     }
-    const created = await this.prisma.transcriptionResult.upsert({
-      where: { jobId },
-      update: {
-        tempoBpm: result.tempoBpm,
-        timeSignature: result.timeSignature,
-        highestNote: result.highestNote,
-        lowestNote: result.lowestNote,
-        repeatedSections: result.repeatedSections,
-        benchmark: result.benchmark,
-        notesCount: result.notesCount,
-        rawNotesPath: result.rawNotesPath ?? null,
-        selectedMode: job.mode,
-      },
-      create: {
-        jobId,
-        projectId: job.projectId,
-        tempoBpm: result.tempoBpm,
-        timeSignature: result.timeSignature,
-        highestNote: result.highestNote,
-        lowestNote: result.lowestNote,
-        repeatedSections: result.repeatedSections,
-        benchmark: result.benchmark,
-        notesCount: result.notesCount,
-        rawNotesPath: result.rawNotesPath ?? null,
-        selectedMode: job.mode,
-      },
-    });
 
-    await this.prisma.sheetAsset.deleteMany({ where: { resultId: created.id } });
-
-    for (const asset of result.assets as Array<{ mode: string; musicxmlPath: string; midiPath: string; rawNotesPath?: string | null }>) {
-      await this.createAssetRow(
-        created.id,
-        job.id,
-        asset.mode,
-        "musicxml",
-        asset.musicxmlPath,
-        "application/vnd.recordare.musicxml+xml",
-        this.getDownloadName(asset.mode, "musicxml"),
-      );
-      await this.createAssetRow(
-        created.id,
-        job.id,
-        asset.mode,
-        "midi",
-        asset.midiPath,
-        "audio/midi",
-        this.getDownloadName(asset.mode, "mid"),
-      );
-    }
-
-    if (result.rawNotesPath) {
-      await this.createAssetRow(created.id, job.id, job.mode, "raw-notes-json", result.rawNotesPath, "application/json", `${job.mode}-raw-notes.json`);
-    }
-  }
-
-  private async createAssetRow(
-    resultId: string,
-    jobId: string,
-    mode: string,
-    assetType: string,
-    storagePath: string,
-    mimeType: string,
-    downloadName: string,
-  ) {
-    const absolutePath = this.storage.resolveGeneratedPath(storagePath);
-    const buffer = await fs.readFile(absolutePath);
-    await this.storage.saveGeneratedBuffer(storagePath, buffer, mimeType);
-    await this.prisma.sheetAsset.create({
-      data: {
-        resultId,
-        jobId,
-        mode,
-        assetType,
-        storagePath,
-        mimeType,
-        downloadName,
-        byteSize: buffer.length,
-      },
-    });
+    const inferredKeySignature = this.inferKeySignature(result.benchmark ?? {});
+    job.result = {
+      tempoBpm: result.tempoBpm,
+      timeSignature: result.timeSignature,
+      keySignature: result.keySignature ?? inferredKeySignature,
+      highestNote: result.highestNote,
+      lowestNote: result.lowestNote,
+      repeatedSections: result.repeatedSections,
+      benchmark: result.benchmark ?? {},
+      notesCount: result.notesCount,
+      warnings: result.warnings ?? [],
+      rawNotesPath: result.rawNotesPath ?? null,
+      debugNotesPath: result.debugNotesPath ?? null,
+      studyNotesPath: result.studyNotesPath ?? null,
+      assets: (result.assets ?? []).map((asset: any) => ({
+        mode: asset.mode,
+        musicxmlPath: asset.musicxmlPath,
+        midiPath: asset.midiPath,
+      })),
+    };
+    job.modelInfo = result.modelInfo ?? null;
+    await job.save();
+    await this.scoreDocuments.ensureDraftScores(jobId);
   }
 
   private async updateJob(jobId: string, patch: Record<string, unknown>) {
-    await this.prisma.transcriptionJob.update({
-      where: { id: jobId },
-      data: patch as any,
-    });
+    await this.jobs.updateOne({ _id: jobId }, { $set: patch });
   }
 
   private delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  private getDownloadName(mode: string, extension: string) {
-    if (mode === "original") {
-      return `raw-debug.${extension}`;
-    }
-    return `${mode}.${extension}`;
+  private inferKeySignature(benchmark: Record<string, number>) {
+    const sharps = Math.round(benchmark.estimatedSharps ?? 0);
+    const keys: Record<number, string> = {
+      [-7]: "Cb",
+      [-6]: "Gb",
+      [-5]: "Db",
+      [-4]: "Ab",
+      [-3]: "Eb",
+      [-2]: "Bb",
+      [-1]: "F",
+      0: "C",
+      1: "G",
+      2: "D",
+      3: "A",
+      4: "E",
+      5: "B",
+      6: "F#",
+      7: "C#",
+    };
+    return keys[sharps] ?? "C";
   }
 }

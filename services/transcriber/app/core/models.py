@@ -42,13 +42,18 @@ class TranscriberResult(BaseModel):
     jobId: str
     tempoBpm: float
     timeSignature: str
+    keySignature: str = "C"
     highestNote: str
     lowestNote: str
     repeatedSections: list[str]
     benchmark: dict[str, float]
     notesCount: int
+    warnings: list[str] = Field(default_factory=list)
     assets: list[TranscriberAssetPath]
     rawNotesPath: Optional[str] = None
+    debugNotesPath: Optional[str] = None
+    studyNotesPath: Optional[str] = None
+    modelInfo: Optional[dict[str, str | float | int | bool | None]] = None
 
 
 class TranscriberJobState(BaseModel):

@@ -32,6 +32,10 @@ async function main() {
   const completedJob = await waitForJob(job.id);
   const result = await fetchJson(`${apiBaseUrl}/api/results/${completedJob.id}`);
   validateResult(result);
+  const draftScore = await fetchJson(`${apiBaseUrl}/api/results/${completedJob.id}/editor-score`);
+  const updatedScore = await saveEditedScore(completedJob.id, draftScore);
+  const reloadedScore = await fetchJson(`${apiBaseUrl}/api/results/${completedJob.id}/editor-score`);
+  validateEditedScoreRoundTrip(draftScore, updatedScore, reloadedScore);
 
   for (const asset of result.assets) {
     const musicxml = await fetchBinary(
@@ -48,6 +52,12 @@ async function main() {
     if (!Array.isArray(rawNotes)) {
       throw new Error("Raw notes endpoint did not return an array.");
     }
+  }
+
+  const editedMusicxml = await fetchBinary(`${apiBaseUrl}/api/results/${completedJob.id}/editor-score/musicxml`);
+  const editedMidi = await fetchBinary(`${apiBaseUrl}/api/results/${completedJob.id}/editor-score/midi`);
+  if (editedMusicxml.length === 0 || editedMidi.length === 0) {
+    throw new Error("Edited export endpoints returned an empty file.");
   }
 
   console.log("End-to-end smoke test passed.");
@@ -193,6 +203,42 @@ function validateResult(result) {
     if (!(key in result)) {
       throw new Error(`Result payload is missing ${key}.`);
     }
+  }
+}
+
+async function saveEditedScore(jobId, score) {
+  const payload = {
+    ...score,
+    tempoBpm: Number(score.tempoBpm) + 2,
+  };
+  const response = await fetch(`${apiBaseUrl}/api/results/${jobId}/editor-score`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    throw new Error(`Edited score save failed: ${response.status} ${await response.text()}`);
+  }
+  return response.json();
+}
+
+function validateEditedScoreRoundTrip(original, saved, reloaded) {
+  if (!saved || !reloaded) {
+    throw new Error("Edited score endpoints did not return payloads.");
+  }
+  if (saved.variant !== "user-edited" || reloaded.variant !== "user-edited") {
+    throw new Error("Edited score was not persisted as a user-edited variant.");
+  }
+  if (saved.tempoBpm !== reloaded.tempoBpm) {
+    throw new Error("Reloaded edited score does not match the saved tempo.");
+  }
+  if (saved.version <= original.version) {
+    throw new Error("Edited score version did not increment after save.");
+  }
+  if (!saved.assets?.musicxmlUrl || !saved.assets?.midiUrl) {
+    throw new Error("Edited score did not return regenerated export assets.");
   }
 }
 

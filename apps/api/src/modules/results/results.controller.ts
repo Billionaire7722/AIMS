@@ -47,6 +47,11 @@ export class ResultsController {
     return this.resultsService.getEditableScore(jobId);
   }
 
+  @Get(":jobId/draft-score")
+  async getDraftScore(@Param("jobId") jobId: string, @Query("mode") mode: string | undefined) {
+    return this.resultsService.getDraftScore(jobId, mode);
+  }
+
   @Put(":jobId/editor-score")
   async saveEditableScore(@Param("jobId") jobId: string, @Body() body: unknown) {
     return this.resultsService.saveEditableScore(jobId, body);

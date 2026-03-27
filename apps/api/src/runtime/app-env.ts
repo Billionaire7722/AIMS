@@ -2,7 +2,7 @@ import path from "node:path";
 
 export function getAppEnv() {
   return {
-    DATABASE_URL: process.env.DATABASE_URL ?? "",
+    MONGODB_URI: process.env.MONGODB_URI ?? "",
     REDIS_HOST: process.env.REDIS_HOST ?? "127.0.0.1",
     REDIS_PORT: Number(process.env.REDIS_PORT ?? 6379),
     TRANSCRIBER_URL: (process.env.TRANSCRIBER_URL ?? "http://127.0.0.1:8001").replace(/\/$/, ""),

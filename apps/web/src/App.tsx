@@ -1,280 +1,450 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import type { EditableScoreResponse, OutputMode, TranscriptionResultResponse } from "@aims/shared-types";
-import { createJob, fetchEditableScore, fetchJobStatus, fetchResult, getApiBaseUrl, uploadMedia } from "./api";
+import { createJob, fetchDraftScore, fetchEditableScore, fetchJob, fetchJobStatus, fetchResult, uploadMedia } from "./api";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { PianoScoreEditor } from "./PianoScoreEditor";
+import { noticeText, type Notice, useLanguage } from "./i18n";
 
-type JobProgress = {
+type AppRoute =
+  | { name: "upload" }
+  | { name: "editor"; jobId: string | null };
+
+type JobRecord = {
   id: string;
+  uploadId: string;
+  projectId: string;
   status: string;
   progress: number;
   mode: string;
-  stage?: string | null;
-  message?: string | null;
+  transcriberJobId?: string | null;
   errorMessage?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  upload?: {
+    id: string;
+    fileName: string;
+    mimeType: string;
+    sizeBytes: number;
+  } | null;
 };
 
-const modeLabel: Record<OutputMode, string> = {
-  "study-friendly": "Study-Friendly Notation",
-  original: "Raw Transcription (Debug)",
-};
+const LAST_JOB_STORAGE_KEY = "aims-last-job-id";
 
-const modeDescription: Record<OutputMode, string> = {
-  "study-friendly": "Cleaner piano-facing notation with a practical correction workflow.",
-  original: "Diagnostic reduction of the raw transcription. Useful for debugging, not polished study notation.",
-};
+function parseRoute(pathname: string): AppRoute {
+  const cleanPath = pathname.replace(/\/+$/, "") || "/";
+  const editorMatch = /^\/editor\/([^/]+)$/.exec(cleanPath);
+  if (editorMatch) {
+    return { name: "editor", jobId: decodeURIComponent(editorMatch[1]) };
+  }
+  return { name: "upload" };
+}
+
+function routeToPath(route: AppRoute) {
+  if (route.name === "editor" && route.jobId) {
+    return `/editor/${encodeURIComponent(route.jobId)}`;
+  }
+  return "/upload";
+}
+
+function formatFileSize(sizeBytes: number) {
+  if (sizeBytes >= 1024 * 1024) {
+    return `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+  if (sizeBytes >= 1024) {
+    return `${Math.round(sizeBytes / 1024)} KB`;
+  }
+  return `${sizeBytes} B`;
+}
 
 export function App() {
-  const [file, setFile] = useState<File | null>(null);
-  const [projectId, setProjectId] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [job, setJob] = useState<JobProgress | null>(null);
-  const [result, setResult] = useState<TranscriptionResultResponse | null>(null);
-  const [editableScore, setEditableScore] = useState<EditableScoreResponse | null>(null);
-  const [selectedMode, setSelectedMode] = useState<OutputMode>("study-friendly");
-  const [feedbackRating, setFeedbackRating] = useState(5);
-  const [feedbackComment, setFeedbackComment] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const editorReady = Boolean(result && editableScore && job?.status === "completed");
-
-  const jobSummary = useMemo(() => {
-    if (!job) {
-      return "No transcription running yet.";
+  const { t } = useLanguage();
+  const [route, setRoute] = useState<AppRoute>(() => {
+    if (typeof window === "undefined") {
+      return { name: "upload" };
     }
-    return `${job.status} | ${job.progress}%`;
-  }, [job]);
+    return parseRoute(window.location.pathname);
+  });
+  const [lastJobId, setLastJobId] = useState<string | null>(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+    return window.localStorage.getItem(LAST_JOB_STORAGE_KEY);
+  });
 
   useEffect(() => {
-    if (!job || job.status === "completed" || job.status === "failed") {
-      return;
+    function handlePopState() {
+      setRoute(parseRoute(window.location.pathname));
     }
-    const timer = window.setInterval(async () => {
-      try {
-        const status = await fetchJobStatus(job.id);
-        setJob(status);
-        if (status.status === "completed") {
-          const [nextResult, nextScore] = await Promise.all([fetchResult(job.id), fetchEditableScore(job.id)]);
-          setResult(nextResult);
-          setEditableScore(nextScore);
-          setMessage("Transcription finished. The draft score is ready to edit.");
-        } else if (status.status === "failed") {
-          setError(status.errorMessage ?? "Transcription failed.");
-        }
-      } catch (pollError) {
-        setError(pollError instanceof Error ? pollError.message : "Failed to poll job status.");
-      }
-    }, 2000);
-    return () => window.clearInterval(timer);
-  }, [job]);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  function navigate(nextRoute: AppRoute) {
+    const path = routeToPath(nextRoute);
+    if (typeof window !== "undefined" && window.location.pathname !== path) {
+      window.history.pushState({}, "", path);
+    }
+    setRoute(nextRoute);
+  }
+
+  function rememberJob(jobId: string) {
+    setLastJobId(jobId);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(LAST_JOB_STORAGE_KEY, jobId);
+    }
+  }
+
+  const pageLabel = route.name === "editor" ? t.app.workspaceHeading : t.app.uploadHeading;
+
+  return (
+    <main className="app-frame">
+      <header className="app-header">
+        <div className="app-branding">
+          <button type="button" className={`nav-chip ${route.name === "upload" ? "active" : ""}`} onClick={() => navigate({ name: "upload" })}>
+            {t.app.uploadHeading}
+          </button>
+          <button
+            type="button"
+            className={`nav-chip ${route.name === "editor" ? "active" : ""}`}
+            onClick={() => navigate({ name: "editor", jobId: lastJobId })}
+            disabled={!lastJobId}
+          >
+            {t.app.workspaceHeading}
+          </button>
+          <div className="app-brand-copy">
+            <span className="app-wordmark">AIMS</span>
+            <p>{pageLabel}</p>
+          </div>
+        </div>
+        <LanguageSwitcher compact />
+      </header>
+
+      <section className="app-view">
+        {route.name === "upload" ? (
+          <UploadPage
+            lastJobId={lastJobId}
+            onOpenEditor={(jobId) => {
+              rememberJob(jobId);
+              navigate({ name: "editor", jobId });
+            }}
+          />
+        ) : (
+          <EditorPage
+            jobId={route.jobId ?? lastJobId}
+            onRememberJob={rememberJob}
+            onOpenUpload={() => navigate({ name: "upload" })}
+          />
+        )}
+      </section>
+    </main>
+  );
+}
+
+function UploadPage({
+  lastJobId,
+  onOpenEditor,
+}: {
+  lastJobId: string | null;
+  onOpenEditor: (jobId: string) => void;
+}) {
+  const { t } = useLanguage();
+  const [file, setFile] = useState<File | null>(null);
+  const [projectId, setProjectId] = useState("");
+  const [selectedMode, setSelectedMode] = useState<OutputMode>("study-friendly");
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState<Notice | null>(null);
+  const [error, setError] = useState<Notice | null>(null);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!file) {
-      setError("Choose an MP3 or MP4 file first.");
+      setError({ key: "chooseFileFirst" });
       return;
     }
-    const normalizedProjectId = projectId.trim();
-    setError(null);
-    setMessage(null);
+
     setUploading(true);
-    setResult(null);
-    setEditableScore(null);
-    setJob(null);
+    setMessage(null);
+    setError(null);
     try {
-      const upload = await uploadMedia(file, normalizedProjectId || undefined);
-      setMessage(`Uploaded ${upload.fileName}. Creating transcription job...`);
-      const nextJob = await createJob(upload.id, selectedMode);
-      setJob(nextJob);
-      setMessage(`Job ${nextJob.id} queued.`);
+      const upload = await uploadMedia(file, projectId.trim() || undefined);
+      setMessage({ key: "uploadingFile", values: { fileName: upload.fileName } });
+      const job = await createJob(upload.id, selectedMode);
+      onOpenEditor(job.id);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Upload failed.");
+      setError(submitError instanceof Error ? { raw: submitError.message } : { key: "uploadFailed" });
     } finally {
       setUploading(false);
     }
   }
 
-  async function handleSendFeedback() {
-    if (!job) {
-      return;
-    }
-    try {
-      const response = await fetch(`${getApiBaseUrl()}/api/results/${job.id}/feedback`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          rating: feedbackRating,
-          comment: feedbackComment || null,
-          issueTags: [],
-        }),
-      });
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-      setMessage("Feedback saved.");
-    } catch (feedbackError) {
-      setError(feedbackError instanceof Error ? feedbackError.message : "Failed to save feedback.");
-    }
-  }
-
-  const tempoText = result ? `${result.tempoBpm.toFixed(1)} BPM` : "Pending";
-  const rangeText = result ? `${result.lowestNote} - ${result.highestNote}` : "Pending";
-  const notesText = result ? `${result.notesCount} notes` : "Pending";
-
   return (
-    <main className="page app-shell">
-      <section className="hero">
-        <div>
-          <p className="eyebrow">AIMS piano transcription</p>
-          <h1>Correct the AI draft directly in the browser.</h1>
-          <p className="lede">
-            Upload audio, run transcription, then edit the resulting piano score inside a lightweight correction workspace.
-            The AI result stays visible as a draft, while the edited version saves and exports separately.
-          </p>
+    <section className="upload-page">
+      <div className="utility-panel upload-form-panel">
+        <div className="section-heading">
+          <p className="section-label">{t.app.uploadHeading}</p>
+          <h1>{t.app.title}</h1>
+          <p className="section-copy">{t.app.lede}</p>
         </div>
-        <div className="hero-card">
-          <div>
-            <span>Status</span>
-            <strong>{jobSummary}</strong>
-          </div>
-          <div>
-            <span>Tempo</span>
-            <strong>{tempoText}</strong>
-          </div>
-          <div>
-            <span>Range</span>
-            <strong>{rangeText}</strong>
-          </div>
-          <div>
-            <span>Notes</span>
-            <strong>{notesText}</strong>
-          </div>
-        </div>
-      </section>
 
-      <section className="content-grid editor-grid-shell">
-        <form className="panel upload-panel" onSubmit={handleSubmit}>
-          <h2>Upload</h2>
+        <form className="upload-form" onSubmit={handleSubmit}>
           <label>
-            Project ID
+            {t.app.projectIdLabel}
             <input
               value={projectId}
               onChange={(event) => setProjectId(event.target.value)}
-              placeholder="Optional existing project id, or leave blank"
+              placeholder={t.app.projectIdPlaceholder}
             />
           </label>
+
           <label>
-            File
+            {t.app.fileLabel}
             <input
               type="file"
-              accept=".mp3,.mp4,audio/mpeg,video/mp4"
+              accept=".mp3,.mp4,audio/mpeg,video/mp4,audio/mp4"
               onChange={(event) => setFile(event.target.files?.[0] ?? null)}
             />
           </label>
+
           <label>
-            Transcription mode
+            {t.app.transcriptionModeLabel}
             <select value={selectedMode} onChange={(event) => setSelectedMode(event.target.value as OutputMode)}>
-              <option value="study-friendly">Study-friendly notation</option>
-              <option value="original">Raw transcription (debug)</option>
+              <option value="study-friendly">{t.outputModes["study-friendly"]}</option>
+              <option value="original">{t.outputModes.original}</option>
             </select>
           </label>
-          <div className="mode-copy">
-            <strong>{modeLabel[selectedMode]}</strong>
-            <p className="hint">{modeDescription[selectedMode]}</p>
+
+          <div className="info-block">
+            <strong>{t.outputModes[selectedMode]}</strong>
+            <p>{t.outputModeDescriptions[selectedMode]}</p>
           </div>
-          <button type="submit" disabled={uploading}>
-            {uploading ? "Processing..." : "Start transcription"}
-          </button>
-          <p className="hint">API: {getApiBaseUrl()}</p>
-          {message ? <p className="success">{message}</p> : null}
-          {error ? <p className="error">{error}</p> : null}
-          {job ? (
-            <div className="job-status">
-              <div className="job-status-row">
-                <strong>{job.status}</strong>
-                <span>{job.progress}%</span>
+
+          {file ? (
+            <div className="data-list">
+              <div>
+                <span>{t.app.fileLabel}</span>
+                <strong>{file.name}</strong>
               </div>
-              {job.stage ? <p className="hint">Stage: {job.stage}</p> : null}
-              {job.message ? <p className="hint">{job.message}</p> : null}
-              <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${job.progress}%` }} />
+              <div>
+                <span>{t.common.status}</span>
+                <strong>{uploading ? t.common.processing : t.common.ready}</strong>
               </div>
-              {job.errorMessage ? <p className="error">{job.errorMessage}</p> : null}
             </div>
           ) : null}
-        </form>
 
-        <section className="panel workspace-panel">
-          <div className="panel-header">
-            <div>
-              <h2>Editor workspace</h2>
-              <p className="hint">The draft score, playback, and export flow live here once transcription completes.</p>
-            </div>
-            {result ? (
-              <span className={`status-badge ${editorReady ? "edited" : "draft"}`}>{editorReady ? "Editor ready" : "Loading editor"}</span>
+          {message ? <p className="inline-message success">{noticeText(message, t)}</p> : null}
+          {error ? <p className="inline-message error">{noticeText(error, t)}</p> : null}
+
+          <div className="inline-actions">
+            <button type="submit" className="primary-action" disabled={uploading}>
+              {uploading ? t.app.processingButton : t.app.startButton}
+            </button>
+            {lastJobId ? (
+              <button type="button" className="secondary-action" onClick={() => onOpenEditor(lastJobId)}>
+                {t.app.workspaceHeading}
+              </button>
             ) : null}
           </div>
+        </form>
+      </div>
 
-          {job && result && editableScore ? (
-            <PianoScoreEditor jobId={job.id} result={result} initialScore={editableScore} />
-          ) : (
-            <div className="empty-editor">
-              <h3>{job ? "Waiting for transcription" : "No score loaded yet"}</h3>
-              <p className="hint">
-                When the job completes, the app will fetch the editable score model and open the correction workspace here.
-              </p>
-            </div>
-          )}
-        </section>
-      </section>
-
-      {result ? (
-        <section className="panel feedback-panel">
-          <h2>Analysis feedback</h2>
-          <div className="feedback-grid">
-            <label>
-              Rating
-              <input
-                type="range"
-                min="1"
-                max="5"
-                value={feedbackRating}
-                onChange={(event) => setFeedbackRating(Number(event.target.value))}
-              />
-              <span>{feedbackRating}/5</span>
-            </label>
-            <label>
-              Comment
-              <textarea
-                rows={4}
-                value={feedbackComment}
-                onChange={(event) => setFeedbackComment(event.target.value)}
-                placeholder="What should be improved?"
-              />
-            </label>
+      <div className="utility-panel upload-side-panel">
+        <div className="mini-stat-grid">
+          <div className="mini-stat">
+            <span>{t.outputModes.original}</span>
+            <strong>{t.variants["ai-draft"]}</strong>
+            <p>{t.outputModeDescriptions.original}</p>
           </div>
-          <button type="button" onClick={handleSendFeedback}>
-            Save feedback
+          <div className="mini-stat">
+            <span>{t.outputModes["study-friendly"]}</span>
+            <strong>{t.editor.title}</strong>
+            <p>{t.outputModeDescriptions["study-friendly"]}</p>
+          </div>
+        </div>
+
+        <div className="info-block">
+          <strong>{t.app.workspaceHeading}</strong>
+          <p>{t.app.workspaceDescription}</p>
+        </div>
+
+        <div className="info-block">
+          <strong>{t.editor.editedExportHeading}</strong>
+          <p>{t.editor.editedExportHint}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EditorPage({
+  jobId,
+  onRememberJob,
+  onOpenUpload,
+}: {
+  jobId: string | null;
+  onRememberJob: (jobId: string) => void;
+  onOpenUpload: () => void;
+}) {
+  const { t } = useLanguage();
+  const [job, setJob] = useState<JobRecord | null>(null);
+  const [result, setResult] = useState<TranscriptionResultResponse | null>(null);
+  const [editableScore, setEditableScore] = useState<EditableScoreResponse | null>(null);
+  const [debugScore, setDebugScore] = useState<EditableScoreResponse | null>(null);
+  const [error, setError] = useState<Notice | null>(null);
+
+  const jobSummary = useMemo(() => {
+    if (!job) {
+      return t.jobs.noJob;
+    }
+    const statusLabel = t.jobs.statusLabels[job.status as keyof typeof t.jobs.statusLabels] ?? job.status;
+    return `${statusLabel} | ${job.progress}%`;
+  }, [job, t]);
+
+  useEffect(() => {
+    if (!jobId) {
+      setJob(null);
+      setResult(null);
+      setEditableScore(null);
+      setDebugScore(null);
+      return;
+    }
+    const resolvedJobId = jobId;
+
+    let cancelled = false;
+    async function loadInitial() {
+      try {
+        const nextJob = await fetchJob(resolvedJobId);
+        if (cancelled) {
+          return;
+        }
+        setJob(nextJob);
+        onRememberJob(resolvedJobId);
+        if (nextJob.status === "completed") {
+          const [nextResult, nextEditableScore, nextDebugScore] = await Promise.all([
+            fetchResult(resolvedJobId),
+            fetchEditableScore(resolvedJobId),
+            fetchDraftScore(resolvedJobId, "original"),
+          ]);
+          if (cancelled) {
+            return;
+          }
+          setResult(nextResult);
+          setEditableScore(nextEditableScore);
+          setDebugScore(nextDebugScore);
+        } else {
+          setResult(null);
+          setEditableScore(null);
+          setDebugScore(null);
+        }
+        setError(null);
+      } catch (loadError) {
+        if (!cancelled) {
+          setError(loadError instanceof Error ? { raw: loadError.message } : { key: "failedToPollJobStatus" });
+        }
+      }
+    }
+
+    void loadInitial();
+    return () => {
+      cancelled = true;
+    };
+  }, [jobId, onRememberJob]);
+
+  useEffect(() => {
+    if (!jobId || !job || job.status === "completed" || job.status === "failed") {
+      return;
+    }
+    const resolvedJobId = jobId;
+
+    const timer = window.setInterval(async () => {
+      try {
+        const status = await fetchJobStatus(resolvedJobId);
+        setJob((current) => (current ? { ...current, ...status } : current));
+        if (status.status === "completed") {
+          const [nextJob, nextResult, nextEditableScore, nextDebugScore] = await Promise.all([
+            fetchJob(resolvedJobId),
+            fetchResult(resolvedJobId),
+            fetchEditableScore(resolvedJobId),
+            fetchDraftScore(resolvedJobId, "original"),
+          ]);
+          setJob(nextJob);
+          setResult(nextResult);
+          setEditableScore(nextEditableScore);
+          setDebugScore(nextDebugScore);
+          setError(null);
+        } else if (status.status === "failed") {
+          setError(status.errorMessage ? { raw: status.errorMessage } : { key: "transcriptionFailed" });
+        }
+      } catch (pollError) {
+        setError(pollError instanceof Error ? { raw: pollError.message } : { key: "failedToPollJobStatus" });
+      }
+    }, 2000);
+
+    return () => window.clearInterval(timer);
+  }, [job, jobId]);
+
+  if (!jobId) {
+    return (
+      <section className="editor-empty-state utility-panel">
+        <div className="section-heading">
+          <p className="section-label">{t.app.workspaceHeading}</p>
+          <h1>{t.app.noScoreLoadedHeading}</h1>
+          <p className="section-copy">{t.app.waitingForTranscriptionBody}</p>
+        </div>
+        <div className="inline-actions">
+          <button type="button" className="primary-action" onClick={onOpenUpload}>
+            {t.app.uploadHeading}
           </button>
-          <details>
-            <summary>Repeated sections</summary>
-            <ul>
-              {result.repeatedSections.length > 0 ? result.repeatedSections.map((section) => <li key={section}>{section}</li>) : <li>No repeated sections detected.</li>}
-            </ul>
-          </details>
-          <details>
-            <summary>Benchmark</summary>
-            <ul>
-              {Object.entries(result.benchmark).map(([key, value]) => (
-                <li key={key}>
-                  {key}: {value.toFixed(3)}s
-                </li>
-              ))}
-            </ul>
-          </details>
-        </section>
-      ) : null}
-    </main>
+        </div>
+      </section>
+    );
+  }
+
+  if (!job || !result || !editableScore || !debugScore) {
+    return (
+      <section className="editor-loading-state">
+        <div className="utility-panel loading-panel">
+          <div className="section-heading">
+            <p className="section-label">{t.app.workspaceHeading}</p>
+            <h1>{job ? t.app.waitingForTranscriptionHeading : t.app.noScoreLoadedHeading}</h1>
+            <p className="section-copy">{job ? t.app.waitingForTranscriptionBody : t.app.workspaceDescription}</p>
+          </div>
+
+          <div className="data-list">
+            <div>
+              <span>{t.common.status}</span>
+              <strong>{jobSummary}</strong>
+            </div>
+              <div>
+                <span>{t.app.fileLabel}</span>
+                <strong>{job?.upload?.fileName ?? t.common.pending}</strong>
+              </div>
+            <div>
+              <span>{t.app.transcriptionModeLabel}</span>
+              <strong>{job ? t.outputModes[job.mode as OutputMode] : t.common.pending}</strong>
+            </div>
+          </div>
+
+          {job?.upload ? (
+            <div className="info-block">
+              <strong>{job.upload.fileName}</strong>
+              <p>{formatFileSize(job.upload.sizeBytes)} | {job.upload.mimeType}</p>
+            </div>
+          ) : null}
+
+          {error ? <p className="inline-message error">{noticeText(error, t)}</p> : null}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <PianoScoreEditor
+      jobId={jobId}
+      fileName={job.upload?.fileName ?? editableScore.title}
+      result={result}
+      initialScore={editableScore}
+      debugScore={debugScore}
+    />
   );
 }

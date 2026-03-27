@@ -14,6 +14,8 @@ class NoteEvent:
     velocity: int = 64
     confidence: float | None = None
     hand: str | None = None
+    start_sec: float | None = None
+    duration_sec: float | None = None
 
 
 MEASURE_SIGNATURE_WIDTH = 12 + 8 + 4 + 2
@@ -21,15 +23,25 @@ MEASURE_SIGNATURE_WIDTH = 12 + 8 + 4 + 2
 
 def estimate_tempo_and_beats(audio_path: Path) -> tuple[float, list[float], float]:
     y, sr = librosa.load(str(audio_path), sr=None, mono=True)
-    onset_envelope = librosa.onset.onset_strength(y=y, sr=sr)
+    if y.size == 0:
+        return 120.0, [0.0], 0.0
+
+    harmonic, percussive = librosa.effects.hpss(y)
+    onset_percussive = librosa.onset.onset_strength(y=percussive, sr=sr, aggregate=np.median)
+    onset_full = librosa.onset.onset_strength(y=y, sr=sr, aggregate=np.median)
+    onset_envelope = (0.75 * onset_percussive) + (0.25 * onset_full)
     tempo, beat_frames = librosa.beat.beat_track(
         onset_envelope=onset_envelope,
         sr=sr,
         trim=False,
-        start_bpm=110,
-        tightness=100,
+        start_bpm=100,
+        tightness=80,
     )
     beat_times = librosa.frames_to_time(beat_frames, sr=sr).tolist()
+    beat_times = [round(float(time_value), 6) for time_value in beat_times if np.isfinite(time_value)]
+    if not beat_times or beat_times[0] > 0.15:
+        beat_times = [0.0, *beat_times]
+    beat_times = sorted(set(beat_times))
     tempo_array = np.asarray(tempo).reshape(-1)
     tempo_value = float(tempo_array[0]) if tempo_array.size > 0 else 120.0
     if not np.isfinite(tempo_value) or tempo_value <= 0:
@@ -49,7 +61,8 @@ def estimate_tempo_and_beats(audio_path: Path) -> tuple[float, list[float], floa
     else:
         clarity = 0.0
 
-    coverage = min(1.0, len(beat_times) / 16.0)
+    estimated_beats = max(1.0, (len(y) / sr) / max(60.0 / tempo_value, 1e-6))
+    coverage = min(1.0, len(beat_times) / estimated_beats)
     beat_confidence = float(np.clip((0.5 * regularity) + (0.3 * clarity) + (0.2 * coverage), 0.0, 1.0))
     return tempo_value, beat_times, beat_confidence
 

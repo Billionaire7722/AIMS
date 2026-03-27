@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { PointerEvent, KeyboardEvent } from "react";
 import type { EditableScoreResponse, ScoreHand, ScoreMeasure, ScoreNote } from "@aims/shared-types";
 import { type AccidentalPreference, type DurationValue, type Tool } from "./scoreEditorUtils";
+import { useLanguage } from "./i18n";
 import {
   beatToX,
   buildBeamGroups,
@@ -46,6 +47,7 @@ export function MeasureNotation({
   onSelectNote,
   onLanePointerDown,
 }: Props) {
+  const { t } = useLanguage();
   const layouts = useMemo(() => buildNotationLayouts(score, measure), [score, measure]);
   const beamGroups = useMemo(() => buildBeamGroups(layouts.all), [layouts.all]);
   const tieSegments = useMemo(() => buildTieSegments(score, measure, layouts.all), [score, measure, layouts.all]);
@@ -59,7 +61,7 @@ export function MeasureNotation({
         className="notation-svg"
         viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
         role="img"
-        aria-label={`Piano grand staff for measure ${measure.number}`}
+        aria-label={t.measure.ariaLabel(measure.number)}
       >
         <defs>
           <filter id="note-glow" x="-30%" y="-30%" width="160%" height="160%">
@@ -129,7 +131,7 @@ export function MeasureNotation({
 
   function renderStaff(staff: "rh" | "lh") {
     const lineYs = staffLines(staff);
-    const label = staff === "rh" ? "Treble" : "Bass";
+    const label = t.measure.staffLabels[staff];
     const staffLabelY = staff === "rh" ? 92 : 182;
     return (
       <g className={`staff staff-${staff}`}>
@@ -264,6 +266,7 @@ export function MeasureNotation({
     const selected = noteLayout.note.id === selectedNoteId;
     const sourceClass = noteLayout.note.source === "ai" ? "source-ai" : "source-user";
     const accidentalXBase = noteLayout.x - 17 - noteIndex * 8;
+    const durationLabel = t.durations[noteLayout.note.durationBeats as DurationValue] ?? String(noteLayout.note.durationBeats);
     return (
       <g
         key={noteLayout.note.id}
@@ -275,7 +278,7 @@ export function MeasureNotation({
         onKeyDown={(event) => handleKeySelect(event, noteLayout.note)}
       >
         <title>
-          {noteLayout.note.pitch} | m.{noteLayout.note.measureNumber} | {noteLayout.note.hand.toUpperCase()} | {noteLayout.note.durationBeats} beats
+          {noteLayout.note.pitch} | {t.measure.label} {noteLayout.note.measureNumber} | {t.hands[noteLayout.note.hand]} | {durationLabel}
         </title>
         <rect x={noteLayout.x - 18} y={noteLayout.y - 18} width={36} height={36} fill="transparent" />
         {ledgerLineYs(noteLayout.staffStep, layout.hand).map((ledgerY, ledgerIndex) => (

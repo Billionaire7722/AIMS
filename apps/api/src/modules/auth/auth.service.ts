@@ -1,27 +1,27 @@
 import { Injectable, UnauthorizedException, ConflictException } from "@nestjs/common";
-import { PrismaService } from "../../prisma/prisma.service.js";
+import { InjectModel } from "@nestjs/mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { Model } from "mongoose";
+import { UserEntity, type UserDocument } from "../../database/mongo.schemas.js";
 import { getAppEnv } from "../../runtime/app-env.js";
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@InjectModel(UserEntity.name) private readonly users: Model<UserDocument>) {}
 
   async register(email: string, password: string, displayName?: string) {
-    const existing = await this.prisma.user.findUnique({ where: { email } });
+    const existing = await this.users.findOne({ email }).lean();
     if (existing) {
       throw new ConflictException("A user with that email already exists.");
     }
     const passwordHash = await bcrypt.hash(password, 10);
-    const user = await this.prisma.user.create({
-      data: { email, passwordHash, displayName },
-    });
-    return this.issueToken(user.id, user.email);
+    const user = await this.users.create({ email, passwordHash, displayName: displayName ?? null });
+    return this.issueToken(user._id, user.email);
   }
 
   async login(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.users.findOne({ email }).lean();
     if (!user) {
       throw new UnauthorizedException("Invalid email or password.");
     }
@@ -33,15 +33,16 @@ export class AuthService {
   }
 
   async me(userId: string) {
-    return this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        displayName: true,
-        createdAt: true,
-      },
-    });
+    const user = await this.users.findById(userId).lean();
+    if (!user) {
+      return null;
+    }
+    return {
+      id: user._id,
+      email: user.email,
+      displayName: user.displayName,
+      createdAt: user.createdAt,
+    };
   }
 
   issueToken(userId: string, email: string) {

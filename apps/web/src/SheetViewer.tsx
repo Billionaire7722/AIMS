@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "./i18n";
 
 type Props = {
   musicXmlUrl?: string | null;
 };
 
 export function SheetViewer({ musicXmlUrl }: Props) {
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [status, setStatus] = useState<string>("Waiting for a score.");
+  const [status, setStatus] = useState<string>(t.sheet.waitingForScore);
 
   useEffect(() => {
     let disposed = false;
 
     async function load() {
       if (!containerRef.current || !musicXmlUrl) {
-        setStatus("Waiting for a score.");
+        setStatus(t.sheet.waitingForScore);
         return;
       }
-      setStatus("Loading sheet music...");
+      setStatus(t.sheet.loadingSheetMusic);
       containerRef.current.innerHTML = "";
       const { OpenSheetMusicDisplay } = await import("opensheetmusicdisplay");
       const osmd = new OpenSheetMusicDisplay(containerRef.current, {
@@ -31,7 +33,7 @@ export function SheetViewer({ musicXmlUrl }: Props) {
         }
       } catch (error) {
         if (!disposed) {
-          setStatus(error instanceof Error ? error.message : "Failed to render score.");
+          setStatus(error instanceof Error ? error.message : t.sheet.failedToRenderScore);
         }
       }
     }
@@ -40,7 +42,7 @@ export function SheetViewer({ musicXmlUrl }: Props) {
     return () => {
       disposed = true;
     };
-  }, [musicXmlUrl]);
+  }, [musicXmlUrl, t.sheet]);
 
   return (
     <div className="sheet-viewer">

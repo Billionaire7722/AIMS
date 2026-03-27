@@ -10,7 +10,7 @@ export class JobsController {
   async create(@Body() body: unknown) {
     const job = await this.jobsService.createTranscriptionJob(body);
     return transcriptionJobResponseSchema.parse({
-      id: job.id,
+      id: job._id,
       uploadId: job.uploadId,
       projectId: job.projectId,
       status: job.status,

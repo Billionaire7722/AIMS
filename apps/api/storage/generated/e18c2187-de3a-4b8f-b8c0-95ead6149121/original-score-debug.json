@@ -1,0 +1,2404 @@
+{
+  "uploadFileName": "cbbaeb12-59d5-4f57-9d18-d75bd4629d3d.mp3",
+  "sourceMode": "original",
+  "scoreTempoBpm": 117.45,
+  "scoreTimeSignature": "4/4",
+  "playbackEvents": [
+    {
+      "id": "note-1-lh-0",
+      "measureNumber": 1,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 0,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-1-rh-0",
+      "measureNumber": 1,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 0,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-1-lh-1",
+      "measureNumber": 1,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 2,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-1-lh-2",
+      "measureNumber": 1,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 2,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-2-lh-0",
+      "measureNumber": 2,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 4,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-2-rh-0",
+      "measureNumber": 2,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 4,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-2-lh-1",
+      "measureNumber": 2,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 6,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-2-lh-2",
+      "measureNumber": 2,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 6,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-3-lh-0",
+      "measureNumber": 3,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 8,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-3-rh-0",
+      "measureNumber": 3,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 8,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-3-lh-1",
+      "measureNumber": 3,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 10,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-3-lh-2",
+      "measureNumber": 3,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 10,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-4-lh-0",
+      "measureNumber": 4,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 12,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-4-rh-0",
+      "measureNumber": 4,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 12,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-4-lh-1",
+      "measureNumber": 4,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 14,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-4-lh-2",
+      "measureNumber": 4,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 14,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-5-lh-0",
+      "measureNumber": 5,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 16,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-5-lh-1",
+      "measureNumber": 5,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 16,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-5-lh-2",
+      "measureNumber": 5,
+      "hand": "lh",
+      "midiValue": 50,
+      "startBeat": 18,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-5-rh-0",
+      "measureNumber": 5,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 18,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-5-lh-3",
+      "measureNumber": 5,
+      "hand": "lh",
+      "midiValue": 52,
+      "startBeat": 19,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-5-rh-1",
+      "measureNumber": 5,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 19,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-6-lh-0",
+      "measureNumber": 6,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 20,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-6-rh-0",
+      "measureNumber": 6,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 20,
+      "durationBeats": 4
+    },
+    {
+      "id": "note-6-lh-1",
+      "measureNumber": 6,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 22,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-7-lh-0",
+      "measureNumber": 7,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 24,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-7-lh-1",
+      "measureNumber": 7,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 24,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-7-lh-2",
+      "measureNumber": 7,
+      "hand": "lh",
+      "midiValue": 50,
+      "startBeat": 26,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-7-rh-0",
+      "measureNumber": 7,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 26,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-7-lh-3",
+      "measureNumber": 7,
+      "hand": "lh",
+      "midiValue": 52,
+      "startBeat": 27,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-7-rh-1",
+      "measureNumber": 7,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 27,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-8-lh-0",
+      "measureNumber": 8,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 28,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-8-rh-0",
+      "measureNumber": 8,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 28,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-8-lh-1",
+      "measureNumber": 8,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 30,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-8-lh-2",
+      "measureNumber": 8,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 30,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-8-rh-1",
+      "measureNumber": 8,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 30,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-8-rh-2",
+      "measureNumber": 8,
+      "hand": "rh",
+      "midiValue": 77,
+      "startBeat": 30,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-9-lh-0",
+      "measureNumber": 9,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 32,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-rh-0",
+      "measureNumber": 9,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 32,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-lh-1",
+      "measureNumber": 9,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 33,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-rh-1",
+      "measureNumber": 9,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 33,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-rh-2",
+      "measureNumber": 9,
+      "hand": "rh",
+      "midiValue": 77,
+      "startBeat": 33,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-lh-2",
+      "measureNumber": 9,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 34,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-lh-3",
+      "measureNumber": 9,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 34,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-rh-3",
+      "measureNumber": 9,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 34,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-lh-4",
+      "measureNumber": 9,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 35,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-9-lh-5",
+      "measureNumber": 9,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 35,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-10-lh-0",
+      "measureNumber": 10,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 36,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-10-rh-0",
+      "measureNumber": 10,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 36,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-10-lh-1",
+      "measureNumber": 10,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 37,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-10-lh-2",
+      "measureNumber": 10,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 38,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-10-lh-3",
+      "measureNumber": 10,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 38,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-10-rh-1",
+      "measureNumber": 10,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 38,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-10-lh-4",
+      "measureNumber": 10,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 39,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-10-lh-5",
+      "measureNumber": 10,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 39,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-11-lh-0",
+      "measureNumber": 11,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 40,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-11-rh-0",
+      "measureNumber": 11,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 40,
+      "durationBeats": 3
+    },
+    {
+      "id": "note-11-lh-1",
+      "measureNumber": 11,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 41,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-11-lh-2",
+      "measureNumber": 11,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 42,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-11-lh-3",
+      "measureNumber": 11,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 42,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-11-lh-4",
+      "measureNumber": 11,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 43,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-11-lh-5",
+      "measureNumber": 11,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 43,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-12-lh-0",
+      "measureNumber": 12,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 44,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-12-rh-0",
+      "measureNumber": 12,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 44,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-12-lh-1",
+      "measureNumber": 12,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 45,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-12-lh-2",
+      "measureNumber": 12,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 46,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-12-lh-3",
+      "measureNumber": 12,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 46,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-12-rh-1",
+      "measureNumber": 12,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 46,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-12-lh-4",
+      "measureNumber": 12,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 47,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-12-lh-5",
+      "measureNumber": 12,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 47,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-13-lh-0",
+      "measureNumber": 13,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 48,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-13-lh-1",
+      "measureNumber": 13,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 48,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-13-lh-2",
+      "measureNumber": 13,
+      "hand": "lh",
+      "midiValue": 50,
+      "startBeat": 50,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-13-rh-0",
+      "measureNumber": 13,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 50,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-13-lh-3",
+      "measureNumber": 13,
+      "hand": "lh",
+      "midiValue": 52,
+      "startBeat": 51,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-13-rh-1",
+      "measureNumber": 13,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 51,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-14-lh-0",
+      "measureNumber": 14,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 52,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-14-rh-0",
+      "measureNumber": 14,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 52,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-14-lh-1",
+      "measureNumber": 14,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 53,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-14-lh-2",
+      "measureNumber": 14,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 54,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-14-rh-1",
+      "measureNumber": 14,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 54,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-14-lh-3",
+      "measureNumber": 14,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 55,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-15-lh-0",
+      "measureNumber": 15,
+      "hand": "lh",
+      "midiValue": 48,
+      "startBeat": 56,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-15-lh-1",
+      "measureNumber": 15,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 56,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-15-lh-2",
+      "measureNumber": 15,
+      "hand": "lh",
+      "midiValue": 50,
+      "startBeat": 58,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-15-rh-0",
+      "measureNumber": 15,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 58,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-15-lh-3",
+      "measureNumber": 15,
+      "hand": "lh",
+      "midiValue": 52,
+      "startBeat": 59,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-15-rh-1",
+      "measureNumber": 15,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 59,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-16-lh-0",
+      "measureNumber": 16,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 60,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-16-rh-0",
+      "measureNumber": 16,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 60,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-16-lh-1",
+      "measureNumber": 16,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 61,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-16-lh-2",
+      "measureNumber": 16,
+      "hand": "lh",
+      "midiValue": 53,
+      "startBeat": 62,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-16-rh-1",
+      "measureNumber": 16,
+      "hand": "rh",
+      "midiValue": 65,
+      "startBeat": 62,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-16-lh-3",
+      "measureNumber": 16,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 63,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-16-lh-4",
+      "measureNumber": 16,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 63,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-17-lh-0",
+      "measureNumber": 17,
+      "hand": "lh",
+      "midiValue": 36,
+      "startBeat": 64.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-17-lh-1",
+      "measureNumber": 17,
+      "hand": "lh",
+      "midiValue": 57,
+      "startBeat": 65,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-17-lh-2",
+      "measureNumber": 17,
+      "hand": "lh",
+      "midiValue": 36,
+      "startBeat": 65.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-17-lh-3",
+      "measureNumber": 17,
+      "hand": "lh",
+      "midiValue": 60,
+      "startBeat": 67.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-18-rh-0",
+      "measureNumber": 18,
+      "hand": "rh",
+      "midiValue": 67,
+      "startBeat": 71,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-18-rh-1",
+      "measureNumber": 18,
+      "hand": "rh",
+      "midiValue": 69,
+      "startBeat": 71.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-19-rh-0",
+      "measureNumber": 19,
+      "hand": "rh",
+      "midiValue": 72,
+      "startBeat": 73,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-19-lh-0",
+      "measureNumber": 19,
+      "hand": "lh",
+      "midiValue": 40,
+      "startBeat": 73.5,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-19-lh-1",
+      "measureNumber": 19,
+      "hand": "lh",
+      "midiValue": 52,
+      "startBeat": 73.5,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-19-rh-1",
+      "measureNumber": 19,
+      "hand": "rh",
+      "midiValue": 69,
+      "startBeat": 73.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-19-rh-2",
+      "measureNumber": 19,
+      "hand": "rh",
+      "midiValue": 72,
+      "startBeat": 73.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-19-rh-3",
+      "measureNumber": 19,
+      "hand": "rh",
+      "midiValue": 74,
+      "startBeat": 75.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-20-lh-0",
+      "measureNumber": 20,
+      "hand": "lh",
+      "midiValue": 33,
+      "startBeat": 76.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-20-rh-0",
+      "measureNumber": 20,
+      "hand": "rh",
+      "midiValue": 76,
+      "startBeat": 77.5,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-20-rh-1",
+      "measureNumber": 20,
+      "hand": "rh",
+      "midiValue": 76,
+      "startBeat": 78.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-20-rh-2",
+      "measureNumber": 20,
+      "hand": "rh",
+      "midiValue": 79,
+      "startBeat": 78.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-20-rh-3",
+      "measureNumber": 20,
+      "hand": "rh",
+      "midiValue": 76,
+      "startBeat": 79,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-21-rh-0",
+      "measureNumber": 21,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 80,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-21-rh-1",
+      "measureNumber": 21,
+      "hand": "rh",
+      "midiValue": 79,
+      "startBeat": 80,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-21-rh-2",
+      "measureNumber": 21,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 80.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-21-rh-3",
+      "measureNumber": 21,
+      "hand": "rh",
+      "midiValue": 76,
+      "startBeat": 80.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-21-rh-4",
+      "measureNumber": 21,
+      "hand": "rh",
+      "midiValue": 74,
+      "startBeat": 81,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-21-rh-5",
+      "measureNumber": 21,
+      "hand": "rh",
+      "midiValue": 76,
+      "startBeat": 82,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-21-lh-0",
+      "measureNumber": 21,
+      "hand": "lh",
+      "midiValue": 46,
+      "startBeat": 83.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-22-rh-0",
+      "measureNumber": 22,
+      "hand": "rh",
+      "midiValue": 67,
+      "startBeat": 85.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-22-rh-1",
+      "measureNumber": 22,
+      "hand": "rh",
+      "midiValue": 69,
+      "startBeat": 85.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-22-rh-2",
+      "measureNumber": 22,
+      "hand": "rh",
+      "midiValue": 74,
+      "startBeat": 87,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-22-rh-3",
+      "measureNumber": 22,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 87.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-23-rh-0",
+      "measureNumber": 23,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 88,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-23-rh-1",
+      "measureNumber": 23,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 88.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-23-rh-2",
+      "measureNumber": 23,
+      "hand": "rh",
+      "midiValue": 62,
+      "startBeat": 90.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-23-rh-3",
+      "measureNumber": 23,
+      "hand": "rh",
+      "midiValue": 74,
+      "startBeat": 90.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-23-rh-4",
+      "measureNumber": 23,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 91,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-24-rh-0",
+      "measureNumber": 24,
+      "hand": "rh",
+      "midiValue": 64,
+      "startBeat": 92,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-24-rh-1",
+      "measureNumber": 24,
+      "hand": "rh",
+      "midiValue": 57,
+      "startBeat": 93,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-24-rh-2",
+      "measureNumber": 24,
+      "hand": "rh",
+      "midiValue": 74,
+      "startBeat": 93,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-24-rh-3",
+      "measureNumber": 24,
+      "hand": "rh",
+      "midiValue": 57,
+      "startBeat": 93.5,
+      "durationBeats": 2
+    },
+    {
+      "id": "note-25-rh-0",
+      "measureNumber": 25,
+      "hand": "rh",
+      "midiValue": 57,
+      "startBeat": 96.5,
+      "durationBeats": 1
+    },
+    {
+      "id": "note-25-lh-0",
+      "measureNumber": 25,
+      "hand": "lh",
+      "midiValue": 58,
+      "startBeat": 97.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-25-lh-1",
+      "measureNumber": 25,
+      "hand": "lh",
+      "midiValue": 59,
+      "startBeat": 97.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-25-lh-2",
+      "measureNumber": 25,
+      "hand": "lh",
+      "midiValue": 58,
+      "startBeat": 99.5,
+      "durationBeats": 0.5
+    },
+    {
+      "id": "note-26-lh-0",
+      "measureNumber": 26,
+      "hand": "lh",
+      "midiValue": 59,
+      "startBeat": 102,
+      "durationBeats": 0.5
+    }
+  ],
+  "measures": [
+    {
+      "measureNumber": 1,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-1-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-1-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-1-lh-1",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-1-lh-2",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 2,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-2-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-2-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-2-lh-1",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-2-lh-2",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 3,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-3-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-3-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-3-lh-1",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-3-lh-2",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 4,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-4-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-4-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-4-lh-1",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-4-lh-2",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 5,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-5-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-5-rh-1",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-5-lh-0",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-5-lh-1",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-5-lh-2",
+          "pitch": "D3",
+          "midiValue": 50,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-5-lh-3",
+          "pitch": "E3",
+          "midiValue": 52,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 6,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-6-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 4,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-6-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-6-lh-1",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 7,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-7-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-7-rh-1",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-7-lh-0",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-7-lh-1",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-7-lh-2",
+          "pitch": "D3",
+          "midiValue": 50,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-7-lh-3",
+          "pitch": "E3",
+          "midiValue": 52,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 8,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-8-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-8-rh-1",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-8-rh-2",
+          "pitch": "F5",
+          "midiValue": 77,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-8-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-8-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-8-lh-2",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 9,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-9-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-rh-1",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-rh-2",
+          "pitch": "F5",
+          "midiValue": 77,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-rh-3",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-9-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-lh-2",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-lh-3",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-lh-4",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-9-lh-5",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 10,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-10-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-10-rh-1",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-10-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-10-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-10-lh-2",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-10-lh-3",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-10-lh-4",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-10-lh-5",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 11,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-11-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 3,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-11-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-11-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-11-lh-2",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-11-lh-3",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-11-lh-4",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-11-lh-5",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 12,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-12-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-12-rh-1",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-12-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-12-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-12-lh-2",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-12-lh-3",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-12-lh-4",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-12-lh-5",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 13,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-13-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-13-rh-1",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-13-lh-0",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-13-lh-1",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-13-lh-2",
+          "pitch": "D3",
+          "midiValue": 50,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-13-lh-3",
+          "pitch": "E3",
+          "midiValue": 52,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 14,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-14-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-14-rh-1",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-14-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-14-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-14-lh-2",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-14-lh-3",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 15,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-15-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-15-rh-1",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-15-lh-0",
+          "pitch": "C3",
+          "midiValue": 48,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-15-lh-1",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 0,
+          "durationBeats": 2,
+          "confidence": 1
+        },
+        {
+          "id": "note-15-lh-2",
+          "pitch": "D3",
+          "midiValue": 50,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-15-lh-3",
+          "pitch": "E3",
+          "midiValue": 52,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 16,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-16-rh-0",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-16-rh-1",
+          "pitch": "F4",
+          "midiValue": 65,
+          "startBeat": 2,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-16-lh-0",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-16-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-16-lh-2",
+          "pitch": "F3",
+          "midiValue": 53,
+          "startBeat": 2,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-16-lh-3",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-16-lh-4",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 17,
+      "timeSignature": "4/4",
+      "rightHandNotes": [],
+      "leftHandNotes": [
+        {
+          "id": "note-17-lh-0",
+          "pitch": "C2",
+          "midiValue": 36,
+          "startBeat": 0.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-17-lh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-17-lh-2",
+          "pitch": "C2",
+          "midiValue": 36,
+          "startBeat": 1.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-17-lh-3",
+          "pitch": "C4",
+          "midiValue": 60,
+          "startBeat": 3.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 18,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-18-rh-0",
+          "pitch": "G4",
+          "midiValue": 67,
+          "startBeat": 3,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-18-rh-1",
+          "pitch": "A4",
+          "midiValue": 69,
+          "startBeat": 3.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": []
+    },
+    {
+      "measureNumber": 19,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-19-rh-0",
+          "pitch": "C5",
+          "midiValue": 72,
+          "startBeat": 1,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-19-rh-1",
+          "pitch": "A4",
+          "midiValue": 69,
+          "startBeat": 1.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-19-rh-2",
+          "pitch": "C5",
+          "midiValue": 72,
+          "startBeat": 1.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-19-rh-3",
+          "pitch": "D5",
+          "midiValue": 74,
+          "startBeat": 3.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-19-lh-0",
+          "pitch": "E2",
+          "midiValue": 40,
+          "startBeat": 1.5,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-19-lh-1",
+          "pitch": "E3",
+          "midiValue": 52,
+          "startBeat": 1.5,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 20,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-20-rh-0",
+          "pitch": "E5",
+          "midiValue": 76,
+          "startBeat": 1.5,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-20-rh-1",
+          "pitch": "E5",
+          "midiValue": 76,
+          "startBeat": 2.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-20-rh-2",
+          "pitch": "G5",
+          "midiValue": 79,
+          "startBeat": 2.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-20-rh-3",
+          "pitch": "E5",
+          "midiValue": 76,
+          "startBeat": 3,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-20-lh-0",
+          "pitch": "A1",
+          "midiValue": 33,
+          "startBeat": 0.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 21,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-21-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 0,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-21-rh-1",
+          "pitch": "G5",
+          "midiValue": 79,
+          "startBeat": 0,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-21-rh-2",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 0.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-21-rh-3",
+          "pitch": "E5",
+          "midiValue": 76,
+          "startBeat": 0.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-21-rh-4",
+          "pitch": "D5",
+          "midiValue": 74,
+          "startBeat": 1,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-21-rh-5",
+          "pitch": "E5",
+          "midiValue": 76,
+          "startBeat": 2,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-21-lh-0",
+          "pitch": "A#2",
+          "midiValue": 46,
+          "startBeat": 3.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 22,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-22-rh-0",
+          "pitch": "G4",
+          "midiValue": 67,
+          "startBeat": 1.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-22-rh-1",
+          "pitch": "A4",
+          "midiValue": 69,
+          "startBeat": 1.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-22-rh-2",
+          "pitch": "D5",
+          "midiValue": 74,
+          "startBeat": 3,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-22-rh-3",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 3.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": []
+    },
+    {
+      "measureNumber": 23,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-23-rh-0",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 0,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-23-rh-1",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 0.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-23-rh-2",
+          "pitch": "D4",
+          "midiValue": 62,
+          "startBeat": 2.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-23-rh-3",
+          "pitch": "D5",
+          "midiValue": 74,
+          "startBeat": 2.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-23-rh-4",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 3,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": []
+    },
+    {
+      "measureNumber": 24,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-24-rh-0",
+          "pitch": "E4",
+          "midiValue": 64,
+          "startBeat": 0,
+          "durationBeats": 1,
+          "confidence": 1
+        },
+        {
+          "id": "note-24-rh-1",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-24-rh-2",
+          "pitch": "D5",
+          "midiValue": 74,
+          "startBeat": 1,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-24-rh-3",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 1.5,
+          "durationBeats": 2,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": []
+    },
+    {
+      "measureNumber": 25,
+      "timeSignature": "4/4",
+      "rightHandNotes": [
+        {
+          "id": "note-25-rh-0",
+          "pitch": "A3",
+          "midiValue": 57,
+          "startBeat": 0.5,
+          "durationBeats": 1,
+          "confidence": 1
+        }
+      ],
+      "leftHandNotes": [
+        {
+          "id": "note-25-lh-0",
+          "pitch": "A#3",
+          "midiValue": 58,
+          "startBeat": 1.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-25-lh-1",
+          "pitch": "B3",
+          "midiValue": 59,
+          "startBeat": 1.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        },
+        {
+          "id": "note-25-lh-2",
+          "pitch": "A#3",
+          "midiValue": 58,
+          "startBeat": 3.5,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ]
+    },
+    {
+      "measureNumber": 26,
+      "timeSignature": "4/4",
+      "rightHandNotes": [],
+      "leftHandNotes": [
+        {
+          "id": "note-26-lh-0",
+          "pitch": "B3",
+          "midiValue": 59,
+          "startBeat": 2,
+          "durationBeats": 0.5,
+          "confidence": 1
+        }
+      ]
+    }
+  ]
+}

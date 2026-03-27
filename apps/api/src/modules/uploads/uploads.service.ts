@@ -1,8 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "../../prisma/prisma.service.js";
+import { InjectModel } from "@nestjs/mongoose";
 import { LocalStorageService } from "../../storage/storage.service.js";
 import { WorkspaceBootstrapService } from "../../workspace/workspace-bootstrap.service.js";
+import { Model } from "mongoose";
 import path from "node:path";
+import { ProjectEntity, type ProjectDocument, UploadEntity, type UploadDocument } from "../../database/mongo.schemas.js";
 
 const allowedMimeTypes = new Set(["audio/mpeg", "video/mp4", "audio/mp4"]);
 const extensionByMimeType: Record<string, string> = {
@@ -14,7 +16,8 @@ const extensionByMimeType: Record<string, string> = {
 @Injectable()
 export class UploadsService {
   constructor(
-    private readonly prisma: PrismaService,
+    @InjectModel(ProjectEntity.name) private readonly projects: Model<ProjectDocument>,
+    @InjectModel(UploadEntity.name) private readonly uploads: Model<UploadDocument>,
     private readonly storage: LocalStorageService,
     private readonly workspace: WorkspaceBootstrapService,
   ) {}
@@ -29,21 +32,19 @@ export class UploadsService {
     const extension = extensionByMimeType[file.mimetype] ?? (path.extname(file.originalname).toLowerCase() || ".bin");
     const normalizedProjectId = projectId?.trim();
     const resolvedProjectId = normalizedProjectId || this.workspace.getDefaultProjectId();
-    const project = await this.prisma.project.findUnique({ where: { id: resolvedProjectId } });
+    const project = await this.projects.findById(resolvedProjectId).lean();
     if (!project) {
       throw new NotFoundException("Project not found. Leave Project ID blank to use the local default project.");
     }
-    const saved = await this.storage.saveUploadBuffer(file.buffer, extension, file.mimetype);
-    const upload = await this.prisma.upload.create({
-      data: {
-        userId: this.workspace.getDefaultUserId(),
-        projectId: resolvedProjectId,
-        originalName: file.originalname,
-        storedName: path.basename(saved.relativePath),
-        storagePath: saved.relativePath,
-        mimeType: file.mimetype,
-        sizeBytes: file.size,
-      },
+    const saved = await this.storage.saveUploadBuffer(file.buffer, extension);
+    const upload = await this.uploads.create({
+      userId: this.workspace.getDefaultUserId(),
+      projectId: resolvedProjectId,
+      originalName: file.originalname,
+      storedName: path.basename(saved.relativePath),
+      storagePath: saved.relativePath,
+      mimeType: file.mimetype,
+      sizeBytes: file.size,
     });
     return upload;
   }

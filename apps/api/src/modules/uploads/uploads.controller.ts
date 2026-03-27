@@ -21,7 +21,7 @@ export class UploadsController {
     }
     const upload = await this.uploadsService.createUpload(file, projectId);
     return uploadResponseSchema.parse({
-      id: upload.id,
+      id: upload._id,
       fileName: upload.originalName,
       mimeType: upload.mimeType,
       sizeBytes: upload.sizeBytes,

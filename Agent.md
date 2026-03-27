@@ -10,7 +10,7 @@ This repository is a local-first monorepo for piano transcription and score rend
     - `src/` application code.
     - `src/modules/` feature modules such as `auth`, `uploads`, `jobs`, `results`, `feedback`, and `health`.
     - `src/prisma/`, `src/storage/`, `src/transcriber/`, `src/workspace/`, and `src/runtime/` shared backend services and startup logic.
-    - `prisma/` Prisma schema and SQL migrations.
+    - `prisma/` Prisma schema and MongoDB schema-sync setup.
     - `scripts/` API-only build helpers.
     - `dist/` compiled output.
 - `apps/web/`
@@ -79,7 +79,7 @@ The repo does not currently include a checked-in ESLint or Prettier config, so f
   - temporary folders such as `_aria_amt_tmp/` and `_aria_utils_tmp/`
 - Treat `.env` files and local checkpoints as machine-specific. Do not commit secrets or paths from local setup.
 - If you change shared request/response shapes, update `packages/shared-types` first and then align the API and web app with those contracts.
-- If you change persistence behavior, check whether Prisma schema or migrations in `apps/api/prisma/` also need updates.
+- If you change persistence behavior, check whether the Prisma schema or schema-push setup in `apps/api/prisma/` also needs updates.
 - Run the relevant verification commands before committing. At minimum, use the affected package typecheck/build command, and run the smoke test for end-to-end changes.
 
 ## Build and test commands
@@ -97,7 +97,7 @@ Run these from the repository root unless noted otherwise.
   - `npm run dev:transcriber`
 - Database:
   - `npm run prisma:generate`
-  - `npm run prisma:migrate`
+  - `npm run prisma:push`
 - Build:
   - `npm run build`
   - `npm run build:api`
@@ -115,4 +115,4 @@ Notes:
 
 - There is no dedicated unit-test command checked in yet.
 - The transcriber should be started before the API.
-- The smoke test depends on local PostgreSQL, Redis, FFmpeg, and the `aria-amt` checkpoint being configured.
+- The smoke test depends on MongoDB, Redis, FFmpeg, and the `aria-amt` checkpoint being configured.

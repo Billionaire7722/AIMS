@@ -1,21 +1,73 @@
 # AIMS Piano Transcription Monorepo
 
-Local-first monorepo for piano transcription, editable score correction, score generation, and web rendering.
+Local-first monorepo for piano audio to editable piano score correction.
 
-The web app includes a v1 piano correction workspace:
-
-- AI output is treated as a draft, not the final score
-- Edits are made against an internal score model
-- MusicXML and MIDI are regenerated from the edited score on save
-- Playback runs from the edited score state so corrections can be heard immediately
+The product is intentionally organized as a correction workspace, not a landing page. AI output is treated as a draft, the internal score model is the source of truth, and edited exports are regenerated from the saved edited score state.
 
 ## Included
 
-- `apps/web` - React + Vite + TypeScript frontend
+- `apps/web` - React + Vite + TypeScript workspace UI
 - `apps/api` - NestJS + TypeScript orchestration API
-- `services/transcriber` - FastAPI + Python 3.11 transcription service
-- `packages/shared-types` - shared request/response schemas
-- `packages/music-domain` - score and notation helpers
+- `services/transcriber` - FastAPI + Python transcription processor
+- `packages/shared-types` - shared request and response schemas
+- `packages/music-domain` - internal score and export helpers
+
+## Core runtime structure
+
+- `/upload` is the transcription entry page
+- `/editor/:jobId` is the desktop-first correction workspace
+- MongoDB is the active database through NestJS + Mongoose
+- Redis is used for local BullMQ job queueing
+- Audio uploads and generated MusicXML or MIDI files stay on the local filesystem
+- The Python transcriber does processing only; persistence lives in the API
+
+## MongoDB data model
+
+The active runtime stores document data in MongoDB collections that mirror the editor model:
+
+- `users`
+- `projects`
+- `uploads`
+- `transcriptionJobs`
+- `scores`
+
+### `scores` collection
+
+Each saved score document stores the internal editor model directly, rather than treating MusicXML as the primary editable source.
+
+Important fields:
+
+- `jobId`
+- `projectId`
+- `uploadId`
+- `sourceMode`
+- `variant`
+- `title`
+- `tempoBpm`
+- `timeSignature`
+- `keySignature`
+- `measureCount`
+- `version`
+- `noteCount`
+- `range`
+- `status`
+- `isCurrent`
+- `basedOnScoreId`
+- `measures`
+- `musicxmlPath`
+- `midiPath`
+- `createdAt`
+- `updatedAt`
+
+`variant` is used to separate AI draft scores from user-edited scores:
+
+- `ai-draft`
+- `user-edited`
+
+`sourceMode` is used to separate the debug draft from the study-friendly score:
+
+- `original`
+- `study-friendly`
 
 ## Local prerequisites
 
@@ -24,71 +76,26 @@ Install these on the host machine before starting the app:
 - Node.js 20+
 - npm 10+
 - Python 3.11+
-- MongoDB Atlas or another MongoDB deployment reachable via `DATABASE_URL`
+- A MongoDB deployment reachable via `MONGODB_URI`
 - Redis 5.0+ running locally
-- FFmpeg installed locally and available on `PATH`, or configured with `FFMPEG_PATH`
-- An `aria-amt` checkpoint file, downloaded locally and referenced by `ARIA_AMT_CHECKPOINT_PATH`
+- FFmpeg on `PATH` or configured with `FFMPEG_PATH`
+- A local `aria-amt` checkpoint referenced by `ARIA_AMT_CHECKPOINT_PATH`
 
-## Service expectations
-
-The app does not use Docker, and the only external service it depends on is the configured MongoDB deployment.
-
-- MongoDB is used by the NestJS API through `DATABASE_URL`
-- The transcriber stores its job state in the same MongoDB database
-- Redis is used by BullMQ through `REDIS_HOST` and `REDIS_PORT`
-- FFmpeg is used by the transcriber for preprocessing
-- The Python service must start successfully before the API because the API checks the transcriber health endpoint on boot
-- The transcriber service uses the local `aria-amt` CLI entrypoint and needs a checkpoint path before jobs can run
-
-## Windows local setup
-
-1. Open a terminal at the repository root.
-2. Copy the env templates and adjust them for your machine:
-   - `apps/api/.env.example` to `apps/api/.env`
-   - `services/transcriber/.env.example` to `services/transcriber/.env`
-   - `apps/web/.env.example` to `apps/web/.env`
-3. Confirm your MongoDB connection string and Redis are set up.
-   - BullMQ requires Redis 5.0 or newer
-   - If your machine already has an older Redis service on `6379`, point the API at a newer local Redis instance instead
-4. Create a Python virtual environment for the transcriber and install its dependencies:
-
-```powershell
-py -3.11 -m venv services/transcriber/.venv
-services\transcriber\.venv\Scripts\Activate.ps1
-pip install -r services/transcriber/requirements.txt
-```
-
-5. Install the Node dependencies for each package:
-
-```powershell
-npm install --prefix packages/shared-types
-npm install --prefix apps/api
-npm install --prefix apps/web
-```
-
-6. Push the Prisma schema to MongoDB:
-
-```powershell
-npm run prisma:push
-```
-
-7. Start the services in separate terminals:
-
-```powershell
-npm run dev:transcriber
-npm run dev:api
-npm run dev:web
-```
-
-The transcriber should start first. The API will fail fast if MongoDB, Redis, or the transcriber are not reachable.
+No Docker is used or required.
 
 ## Environment variables
 
-### API
+Copy the env templates and fill them in for your machine:
+
+- [apps/api/.env.example](/D:/AIMS/apps/api/.env.example)
+- [services/transcriber/.env.example](/D:/AIMS/services/transcriber/.env.example)
+- [apps/web/.env.example](/D:/AIMS/apps/web/.env.example)
+
+### API env
 
 `apps/api/.env` should define:
 
-- `DATABASE_URL`
+- `MONGODB_URI`
 - `REDIS_HOST`
 - `REDIS_PORT`
 - `API_PORT`
@@ -98,8 +105,10 @@ The transcriber should start first. The API will fail fast if MongoDB, Redis, or
 - `GENERATED_ASSETS_DIR`
 - `JWT_SECRET`
 - `CORS_ORIGIN`
+- `LOCAL_DEV_USER_EMAIL`
+- `LOCAL_DEV_PROJECT_NAME`
 
-### Transcriber
+### Transcriber env
 
 `services/transcriber/.env` should define:
 
@@ -112,31 +121,68 @@ The transcriber should start first. The API will fail fast if MongoDB, Redis, or
 - `ARIA_AMT_BIN`
 - `ARIA_AMT_CHECKPOINT_PATH`
 
-### Web
+### Web env
 
 `apps/web/.env` should define:
 
 - `VITE_API_BASE_URL`
+- `WEB_PORT`
 
-## Dependency checks
+## Windows local setup
 
-Before starting the app, verify the local runtime pieces:
+1. Create the env files from the examples.
+2. Create the transcriber virtual environment and install Python dependencies:
 
 ```powershell
-psql --version
-redis-cli ping
-ffmpeg -version
+py -3.11 -m venv services/transcriber/.venv
+services\transcriber\.venv\Scripts\Activate.ps1
+pip install -r services/transcriber/requirements.txt
 ```
 
-If `ffmpeg` is not on `PATH`, set `FFMPEG_PATH` in `services/transcriber/.env` to the full executable path.
+3. Install the package dependencies:
 
-If Redis is not reachable at the configured host and port, the API will fail startup with a clear message.
+```powershell
+npm install
+npm install --prefix apps/api
+npm install --prefix apps/web
+npm install --prefix packages/shared-types
+```
 
-If MongoDB is not reachable at the configured `DATABASE_URL`, the API will fail startup with a clear message.
+4. Start the services in separate terminals:
 
-For `aria-amt`, set `ARIA_AMT_CHECKPOINT_PATH` to a local copy of the `piano-medium-double-1.0.safetensors` checkpoint before starting the transcriber. During local development on Windows, the `ARIA_AMT_BIN` path can point to `services/transcriber/.venv/Scripts/aria-amt.exe`.
+```powershell
+npm run dev:transcriber
+npm run dev:api
+npm run dev:web
+```
 
-If you are on Windows and using WSL-hosted Redis, make sure the API `REDIS_HOST` / `REDIS_PORT` pair matches the forwarded localhost port. This repo was validated with Redis 7 listening on `127.0.0.1:6380`.
+The transcriber launcher now prefers `services/transcriber/.venv` automatically when it exists. Start the transcriber first, then the API, then the web app.
+
+## Two-click local testing
+
+After the one-time setup is done, you can run the app for testing with a double-click:
+
+- [Start AIMS Local Test.bat](/D:/AIMS/Start%20AIMS%20Local%20Test.bat) starts the transcriber, API, and web app if they are not already running, waits for health checks, and opens the upload page in your browser.
+- [Stop AIMS Local Test.bat](/D:/AIMS/Stop%20AIMS%20Local%20Test.bat) stops the web, API, and transcriber processes bound to the configured ports.
+
+The launcher writes service logs to `run-logs`.
+
+## Storage and persistence rules
+
+- MongoDB stores metadata, jobs, and score documents
+- Large binary media is not stored inside MongoDB
+- Uploads stay under `UPLOAD_DIR`
+- Generated draft and edited assets stay under `GENERATED_ASSETS_DIR`
+- Draft MusicXML and MIDI paths are stored as metadata only
+- Edited MusicXML and MIDI paths are stored as metadata only
+
+## Score pipeline rules
+
+- The app keeps raw debug and study-friendly score modes separate
+- The study-friendly editor works from a cleaned internal score model
+- Internal part labels exposed to users are `Piano RH` and `Piano LH`
+- MusicXML is an export format, not the primary editable source
+- Edited exports come from the saved edited score state, not the raw AI draft
 
 ## Smoke test
 
@@ -146,17 +192,18 @@ After the services are running, execute the local end-to-end smoke test:
 npm run e2e:smoke
 ```
 
-The smoke test:
+The smoke test validates the local-first flow:
 
 1. Waits for the API and transcriber health endpoints
-2. Uses a real solo piano MP3 by default, or a local file if `SMOKE_SAMPLE_FILE` is set
-3. Trims the source with FFmpeg
-4. Uploads the file to the API
-5. Creates a transcription job
-6. Waits for completion
-7. Verifies result, MusicXML, MIDI, and raw-notes endpoints
-
-The local end-to-end smoke test has been run successfully against a real piano MP3 in this workspace.
+2. Downloads or reuses a real piano sample and trims it with FFmpeg
+3. Uploads the audio file
+4. Creates a transcription job
+5. Waits for job completion
+6. Verifies MongoDB-backed result metadata
+7. Loads the editable score
+8. Saves an edited score version
+9. Reloads the edited score and checks that the saved state persisted
+10. Verifies regenerated edited MusicXML and MIDI downloads
 
 You can point the smoke test at a local sample file with:
 
@@ -165,29 +212,19 @@ $env:SMOKE_SAMPLE_FILE = "C:\path\to\your\piano-sample.mp3"
 npm run e2e:smoke
 ```
 
-## Common ports
+## Current workflow
 
-- API: `API_PORT` default `4000`
-- Transcriber: `TRANSCRIBER_PORT` default `8001`
-- Web: `WEB_PORT` default `5173`
-
-## Current flow
-
-The intended local path is:
-
-1. Upload MP3 or MP4 in the web app
-2. API stores the file in MongoDB and creates a job
-3. API enqueues the job with BullMQ
-4. API worker calls the FastAPI transcriber service
-5. Transcriber preprocesses, transcribes, tracks tempo, quantizes, splits staves, and exports MusicXML + MIDI
-6. API stores job results and serves the generated draft assets back to the web app
-7. The web app loads the editable score model, lets the user correct notes, and saves the edited version separately
-8. Edited MusicXML and MIDI are regenerated from the internal score model and exposed as final exports
+1. Upload piano audio from the upload page
+2. Create a transcription job
+3. Review the AI draft as a draft only
+4. Open the study-friendly editor workspace
+5. Correct notes against the internal score model
+6. Save the edited score as a separate version
+7. Export draft or edited assets explicitly
 
 ## Notes
 
-- No Docker files are used anywhere in this repo.
-- Uploads and generated score assets are stored in MongoDB GridFS, with local scratch files used only as transient transcriber I/O.
-- The transcriber produces both `original` and `study-friendly` variants.
-- The editable score model is the source of truth for correction, playback, and export. MusicXML is only an export format.
-- The v1 editor intentionally focuses on practical piano correction workflow rather than full engraving completeness.
+- No PostgreSQL or Prisma migration steps remain in the active runtime path
+- No GridFS storage is used in the active runtime path
+- No Docker files or Docker setup are required
+- The editor is intentionally desktop-first and correction-focused

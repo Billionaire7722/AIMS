@@ -120,6 +120,13 @@ export function createNoteId(prefix: string, measureNumber: number, hand: ScoreH
   return `${prefix}-${measureNumber}-${hand}-${index}`;
 }
 
+function reindexDraftNotes(notes: ScoreNote[], measureNumber: number, hand: ScoreHand): ScoreNote[] {
+  return notes.map((note, index) => ({
+    ...note,
+    id: createNoteId("note", measureNumber, hand, index),
+  }));
+}
+
 export function scorePitchToAccidental(pitch: string): ScoreNote["accidental"] {
   if (pitch.includes("##")) {
     return "double-sharp";
@@ -202,8 +209,8 @@ export function buildEditableScoreDraft(input: BuildScoreInput): EditableScore {
 
   for (let number = 1; number <= measureCount; number += 1) {
     const existing = measuresMap.get(number) ?? { rh: [], lh: [] };
-    const rightHandNotes = assignChordGroups(existing.rh.sort(compareNotes));
-    const leftHandNotes = assignChordGroups(existing.lh.sort(compareNotes));
+    const rightHandNotes = reindexDraftNotes(assignChordGroups(existing.rh.sort(compareNotes)), number, "rh");
+    const leftHandNotes = reindexDraftNotes(assignChordGroups(existing.lh.sort(compareNotes)), number, "lh");
     measures.push({
       number,
       startBeat: roundTo((number - 1) * beatsPerMeasure, 4),

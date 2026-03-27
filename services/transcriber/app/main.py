@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-state_store = JobStateStore(settings.database_url)
+state_store = JobStateStore()
 pipeline = TranscriptionPipeline(settings=settings, state_store=state_store)
 
 

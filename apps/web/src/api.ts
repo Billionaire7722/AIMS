@@ -68,12 +68,39 @@ export async function fetchJobStatus(jobId: string) {
   }>(`/jobs/${jobId}/status`);
 }
 
+export async function fetchJob(jobId: string) {
+  return request<{
+    id: string;
+    uploadId: string;
+    projectId: string;
+    status: string;
+    progress: number;
+    mode: string;
+    transcriberJobId?: string | null;
+    errorMessage?: string | null;
+    createdAt: string;
+    updatedAt: string;
+    upload?: {
+      id: string;
+      fileName: string;
+      mimeType: string;
+      sizeBytes: number;
+    } | null;
+  }>(`/jobs/${jobId}`);
+}
+
 export async function fetchResult(jobId: string) {
   return transcriptionResultResponseSchema.parse(await request(`/results/${jobId}`));
 }
 
 export async function fetchEditableScore(jobId: string): Promise<EditableScoreResponse> {
   return editableScoreResponseSchema.parse(await request(`/results/${jobId}/editor-score`));
+}
+
+export async function fetchDraftScore(jobId: string, mode: "original" | "study-friendly"): Promise<EditableScoreResponse> {
+  return editableScoreResponseSchema.parse(
+    await request(`/results/${jobId}/draft-score?mode=${encodeURIComponent(mode)}`),
+  );
 }
 
 export async function saveEditableScore(jobId: string, score: EditableScoreSaveInput): Promise<EditableScoreResponse> {

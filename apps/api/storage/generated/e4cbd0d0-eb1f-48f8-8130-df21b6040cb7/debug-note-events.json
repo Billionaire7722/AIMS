@@ -1,0 +1,1271 @@
+[
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 0.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 0.0,
+    "durationQl": 2.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 2.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 2.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 4.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 4.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 6.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 6.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 8.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 8.0,
+    "durationQl": 2.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 10.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 10.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 12.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 12.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 14.0,
+    "durationQl": 4.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 14.0,
+    "durationQl": 4.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 50,
+    "pitchName": "D3",
+    "startQl": 18.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 18.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 52,
+    "pitchName": "E3",
+    "startQl": 19.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 64,
+    "pitchName": "E4",
+    "startQl": 19.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 20.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 20.0,
+    "durationQl": 4.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 22.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 24.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 24.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 50,
+    "pitchName": "D3",
+    "startQl": 26.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 26.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 52,
+    "pitchName": "E3",
+    "startQl": 27.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 64,
+    "pitchName": "E4",
+    "startQl": 27.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 28.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 28.0,
+    "durationQl": 2.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 30.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 30.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 30.0,
+    "durationQl": 2.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 77,
+    "pitchName": "F5",
+    "startQl": 30.0,
+    "durationQl": 2.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 32.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 32.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 33.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 33.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 77,
+    "pitchName": "F5",
+    "startQl": 33.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 34.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 34.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 34.0,
+    "durationQl": 1.0,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 35.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 35.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 36.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 36.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 37.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 38.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 38.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 38.0,
+    "durationQl": 1.0,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 39.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 39.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 40.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 40.0,
+    "durationQl": 3.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 41.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 42.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 42.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 43.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 43.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 44.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 44.0,
+    "durationQl": 2.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 45.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 46.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 46.0,
+    "durationQl": 1.0,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 46.0,
+    "durationQl": 1.0,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 47.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 47.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 48.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 48.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 50,
+    "pitchName": "D3",
+    "startQl": 50.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 50.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 52,
+    "pitchName": "E3",
+    "startQl": 51.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 64,
+    "pitchName": "E4",
+    "startQl": 51.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 52.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 52.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 53.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 54.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 54.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 55.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 48,
+    "pitchName": "C3",
+    "startQl": 56.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 56.0,
+    "durationQl": 2.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 50,
+    "pitchName": "D3",
+    "startQl": 58.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 58.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 52,
+    "pitchName": "E3",
+    "startQl": 59.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 64,
+    "pitchName": "E4",
+    "startQl": 59.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 60.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 60.0,
+    "durationQl": 1.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 61.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 53,
+    "pitchName": "F3",
+    "startQl": 62.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "pitchName": "F4",
+    "startQl": 62.0,
+    "durationQl": 2.0,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 63.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 63.0,
+    "durationQl": 1.0,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 36,
+    "pitchName": "C2",
+    "startQl": 64.5,
+    "durationQl": 0.5,
+    "velocity": 45,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 65.0,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 36,
+    "pitchName": "C2",
+    "startQl": 65.5,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 59,
+    "pitchName": "B3",
+    "startQl": 66.5,
+    "durationQl": 0.5,
+    "velocity": 65,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 60,
+    "pitchName": "C4",
+    "startQl": 67.5,
+    "durationQl": 0.5,
+    "velocity": 45,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 40,
+    "pitchName": "E2",
+    "startQl": 68.0,
+    "durationQl": 0.5,
+    "velocity": 55,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 68.5,
+    "durationQl": 0.5,
+    "velocity": 42,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 68.5,
+    "durationQl": 0.5,
+    "velocity": 42,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 64,
+    "pitchName": "E4",
+    "startQl": 69.0,
+    "durationQl": 1.0,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 70.0,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 69,
+    "pitchName": "A4",
+    "startQl": 71.5,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 69,
+    "pitchName": "A4",
+    "startQl": 72.5,
+    "durationQl": 0.5,
+    "velocity": 45,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 72,
+    "pitchName": "C5",
+    "startQl": 73.5,
+    "durationQl": 0.5,
+    "velocity": 65,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 40,
+    "pitchName": "E2",
+    "startQl": 74.0,
+    "durationQl": 0.5,
+    "velocity": 28,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 52,
+    "pitchName": "E3",
+    "startQl": 74.0,
+    "durationQl": 0.5,
+    "velocity": 28,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 69,
+    "pitchName": "A4",
+    "startQl": 74.0,
+    "durationQl": 0.5,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 40,
+    "pitchName": "E2",
+    "startQl": 74.5,
+    "durationQl": 0.5,
+    "velocity": 45,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 74.5,
+    "durationQl": 0.5,
+    "velocity": 40,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 33,
+    "pitchName": "A1",
+    "startQl": 76.5,
+    "durationQl": 0.5,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 72,
+    "pitchName": "C5",
+    "startQl": 76.5,
+    "durationQl": 0.5,
+    "velocity": 65,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 76,
+    "pitchName": "E5",
+    "startQl": 77.5,
+    "durationQl": 1.0,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 76,
+    "pitchName": "E5",
+    "startQl": 78.5,
+    "durationQl": 0.5,
+    "velocity": 52,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 79,
+    "pitchName": "G5",
+    "startQl": 78.5,
+    "durationQl": 0.5,
+    "velocity": 52,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 76,
+    "pitchName": "E5",
+    "startQl": 79.0,
+    "durationQl": 0.5,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 80.0,
+    "durationQl": 0.5,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 79,
+    "pitchName": "G5",
+    "startQl": 80.0,
+    "durationQl": 0.5,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 80.5,
+    "durationQl": 0.5,
+    "velocity": 47,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 80.5,
+    "durationQl": 0.5,
+    "velocity": 47,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 76,
+    "pitchName": "E5",
+    "startQl": 80.5,
+    "durationQl": 0.5,
+    "velocity": 47,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 76,
+    "pitchName": "E5",
+    "startQl": 82.0,
+    "durationQl": 0.5,
+    "velocity": 75,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 70,
+    "pitchName": "B-4",
+    "startQl": 83.0,
+    "durationQl": 0.5,
+    "velocity": 55,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 83.5,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 85.5,
+    "durationQl": 0.5,
+    "velocity": 68,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 69,
+    "pitchName": "A4",
+    "startQl": 85.5,
+    "durationQl": 0.5,
+    "velocity": 68,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 86.0,
+    "durationQl": 0.5,
+    "velocity": 55,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 66,
+    "pitchName": "F#4",
+    "startQl": 86.5,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 89.5,
+    "durationQl": 0.5,
+    "velocity": 55,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 62,
+    "pitchName": "D4",
+    "startQl": 90.5,
+    "durationQl": 0.5,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "pitchName": "G4",
+    "startQl": 92.5,
+    "durationQl": 0.5,
+    "velocity": 40,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 93.0,
+    "durationQl": 1.0,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 94.5,
+    "durationQl": 1.0,
+    "velocity": 40,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 96.5,
+    "durationQl": 0.5,
+    "velocity": 45,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 58,
+    "pitchName": "B-3",
+    "startQl": 97.5,
+    "durationQl": 0.5,
+    "velocity": 62,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 59,
+    "pitchName": "B3",
+    "startQl": 97.5,
+    "durationQl": 0.5,
+    "velocity": 62,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 59,
+    "pitchName": "B3",
+    "startQl": 98.0,
+    "durationQl": 0.5,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 58,
+    "pitchName": "B-3",
+    "startQl": 99.5,
+    "durationQl": 0.5,
+    "velocity": 55,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 57,
+    "pitchName": "A3",
+    "startQl": 101.5,
+    "durationQl": 0.5,
+    "velocity": 55,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 59,
+    "pitchName": "B3",
+    "startQl": 102.0,
+    "durationQl": 0.5,
+    "velocity": 45,
+    "confidence": 1.0,
+    "hand": "rh"
+  }
+]

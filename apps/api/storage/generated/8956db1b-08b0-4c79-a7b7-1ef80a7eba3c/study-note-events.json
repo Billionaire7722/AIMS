@@ -1,0 +1,266 @@
+[
+  {
+    "pitch": 66,
+    "startQl": 0.0,
+    "durationQl": 1.0,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 75,
+    "startQl": 0.0,
+    "durationQl": 0.5,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 78,
+    "startQl": 0.0,
+    "durationQl": 0.5,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 83,
+    "startQl": 0.0,
+    "durationQl": 0.5,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 83,
+    "startQl": 0.5,
+    "durationQl": 0.5,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 90,
+    "startQl": 0.5,
+    "durationQl": 0.5,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 40,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 51,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 88,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 90,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 95,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 40,
+    "startQl": 1.5,
+    "durationQl": 0.5,
+    "velocity": 75,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 95,
+    "startQl": 1.5,
+    "durationQl": 0.5,
+    "velocity": 87,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 100,
+    "startQl": 1.5,
+    "durationQl": 0.5,
+    "velocity": 87,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 51,
+    "startQl": 2.0,
+    "durationQl": 0.5,
+    "velocity": 77,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 63,
+    "startQl": 2.0,
+    "durationQl": 0.5,
+    "velocity": 77,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 93,
+    "startQl": 2.0,
+    "durationQl": 0.5,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 95,
+    "startQl": 2.0,
+    "durationQl": 0.5,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 100,
+    "startQl": 2.0,
+    "durationQl": 0.5,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 51,
+    "startQl": 2.5,
+    "durationQl": 0.5,
+    "velocity": 68,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 93,
+    "startQl": 2.5,
+    "durationQl": 0.5,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 95,
+    "startQl": 2.5,
+    "durationQl": 0.5,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 40,
+    "startQl": 3.0,
+    "durationQl": 0.5,
+    "velocity": 68,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 50,
+    "startQl": 3.0,
+    "durationQl": 0.5,
+    "velocity": 68,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 87,
+    "startQl": 3.0,
+    "durationQl": 0.5,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 90,
+    "startQl": 3.0,
+    "durationQl": 0.5,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 93,
+    "startQl": 3.0,
+    "durationQl": 0.5,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 51,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 50,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 93,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 95,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 40,
+    "startQl": 4.0,
+    "durationQl": 0.5,
+    "velocity": 75,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 72,
+    "startQl": 4.0,
+    "durationQl": 0.5,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 79,
+    "startQl": 4.0,
+    "durationQl": 0.5,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "rh"
+  }
+]

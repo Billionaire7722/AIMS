@@ -1,0 +1,554 @@
+[
+  {
+    "pitch": 47,
+    "startQl": 0.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 52,
+    "startQl": 0.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 55,
+    "startQl": 0.0,
+    "durationQl": 1.0,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 76,
+    "startQl": 0.0,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 88,
+    "startQl": 0.0,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 0.0,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 0.0,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 88,
+    "startQl": 0.25,
+    "durationQl": 0.25,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 90,
+    "startQl": 0.25,
+    "durationQl": 0.25,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 0.25,
+    "durationQl": 0.25,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 0.25,
+    "durationQl": 0.25,
+    "velocity": 76,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 87,
+    "startQl": 0.5,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 88,
+    "startQl": 0.5,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 90,
+    "startQl": 0.5,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 0.5,
+    "durationQl": 0.25,
+    "velocity": 78,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 87,
+    "startQl": 0.75,
+    "durationQl": 0.25,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 90,
+    "startQl": 0.75,
+    "durationQl": 0.25,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 0.75,
+    "durationQl": 0.25,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 0.75,
+    "durationQl": 0.25,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 40,
+    "startQl": 1.0,
+    "durationQl": 1.0,
+    "velocity": 79,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 47,
+    "startQl": 1.0,
+    "durationQl": 1.0,
+    "velocity": 79,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 51,
+    "startQl": 1.0,
+    "durationQl": 1.0,
+    "velocity": 79,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 88,
+    "startQl": 1.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 90,
+    "startQl": 1.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 1.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 1.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 90,
+    "startQl": 1.25,
+    "durationQl": 0.5,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 1.25,
+    "durationQl": 0.5,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 93,
+    "startQl": 1.25,
+    "durationQl": 0.5,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 1.25,
+    "durationQl": 0.5,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 1.75,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 93,
+    "startQl": 1.75,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 1.75,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 100,
+    "startQl": 1.75,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 47,
+    "startQl": 2.0,
+    "durationQl": 0.25,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 51,
+    "startQl": 2.0,
+    "durationQl": 0.25,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 52,
+    "startQl": 2.0,
+    "durationQl": 0.25,
+    "velocity": 82,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 88,
+    "startQl": 2.0,
+    "durationQl": 0.25,
+    "velocity": 88,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 2.0,
+    "durationQl": 0.25,
+    "velocity": 88,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 2.0,
+    "durationQl": 0.25,
+    "velocity": 88,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 100,
+    "startQl": 2.0,
+    "durationQl": 0.25,
+    "velocity": 88,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 40,
+    "startQl": 2.25,
+    "durationQl": 1.0,
+    "velocity": 77,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 47,
+    "startQl": 2.25,
+    "durationQl": 1.0,
+    "velocity": 77,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 51,
+    "startQl": 2.25,
+    "durationQl": 1.0,
+    "velocity": 77,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 91,
+    "startQl": 2.25,
+    "durationQl": 0.75,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 93,
+    "startQl": 2.25,
+    "durationQl": 0.75,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 2.25,
+    "durationQl": 0.75,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 100,
+    "startQl": 2.25,
+    "durationQl": 0.75,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 83,
+    "startQl": 3.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 88,
+    "startQl": 3.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 3.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 93,
+    "startQl": 3.0,
+    "durationQl": 0.25,
+    "velocity": 86,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 47,
+    "startQl": 3.25,
+    "durationQl": 0.25,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 50,
+    "startQl": 3.25,
+    "durationQl": 0.25,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 51,
+    "startQl": 3.25,
+    "durationQl": 0.25,
+    "velocity": 70,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 88,
+    "startQl": 3.25,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 90,
+    "startQl": 3.25,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 3.25,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 93,
+    "startQl": 3.25,
+    "durationQl": 0.25,
+    "velocity": 84,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 47,
+    "startQl": 3.5,
+    "durationQl": 0.25,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 52,
+    "startQl": 3.5,
+    "durationQl": 0.25,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 55,
+    "startQl": 3.5,
+    "durationQl": 0.25,
+    "velocity": 85,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 88,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 91,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 93,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 95,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 83,
+    "confidence": 1.0,
+    "hand": "right"
+  },
+  {
+    "pitch": 40,
+    "startQl": 3.75,
+    "durationQl": 0.25,
+    "velocity": 69,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 47,
+    "startQl": 3.75,
+    "durationQl": 0.25,
+    "velocity": 69,
+    "confidence": 1.0,
+    "hand": "left"
+  },
+  {
+    "pitch": 51,
+    "startQl": 3.75,
+    "durationQl": 0.25,
+    "velocity": 69,
+    "confidence": 1.0,
+    "hand": "left"
+  }
+]

@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "python -m app.main",
-    "start": "python -m app.main",
-    "typecheck": "python -m compileall app"
+    "dev": "node scripts/run-python.mjs -m app.main",
+    "start": "node scripts/run-python.mjs -m app.main",
+    "typecheck": "node scripts/run-python.mjs -m compileall app"
   }
 }

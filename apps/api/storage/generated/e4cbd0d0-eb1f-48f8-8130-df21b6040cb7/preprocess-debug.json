@@ -1,0 +1,17 @@
+{
+  "processingProfile": "simple-piano",
+  "sourcePath": "D:\\AIMS\\apps\\api\\storage\\uploads\\cbbaeb12-59d5-4f57-9d18-d75bd4629d3d.mp3",
+  "preprocessing": {
+    "decoded_path": "D:\\AIMS\\apps\\api\\storage\\generated\\e4cbd0d0-eb1f-48f8-8130-df21b6040cb7\\decoded.wav",
+    "output_path": "D:\\AIMS\\apps\\api\\storage\\generated\\e4cbd0d0-eb1f-48f8-8130-df21b6040cb7\\normalized.wav",
+    "sample_rate": 22050,
+    "channels": 1,
+    "decoded_duration_sec": 56.07619,
+    "output_duration_sec": 51.744399,
+    "trim_start_sec": 4.331791,
+    "trim_end_sec": 56.07619,
+    "peak_before_norm": 0.838806,
+    "peak_after_norm": 0.92,
+    "applied_gain": 1.096797
+  }
+}

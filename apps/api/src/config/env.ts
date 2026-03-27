@@ -2,7 +2,7 @@ import { z } from "zod";
 import path from "node:path";
 
 const envSchema = z.object({
-  DATABASE_URL: z.string().min(1),
+  MONGODB_URI: z.string().min(1),
   REDIS_HOST: z.string().default("127.0.0.1"),
   REDIS_PORT: z.coerce.number().int().positive().default(6379),
   API_PORT: z.coerce.number().int().positive().default(4000),

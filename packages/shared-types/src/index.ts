@@ -14,8 +14,12 @@ export type ScoreVariant = z.infer<typeof scoreVariantSchema>;
 
 export const rawNoteEventSchema = z.object({
   pitch: z.number().int().min(0).max(127),
+  pitchName: z.string().min(1).optional().nullable(),
   startQl: z.number().nonnegative(),
   durationQl: z.number().positive(),
+  startSec: z.number().nonnegative().optional().nullable(),
+  durationSec: z.number().nonnegative().optional().nullable(),
+  endSec: z.number().nonnegative().optional().nullable(),
   velocity: z.number().int().min(1).max(127),
   confidence: z.number().min(0).max(1).optional().nullable(),
   hand: scoreHandSchema.optional().nullable(),
@@ -155,6 +159,7 @@ export const transcriptionResultResponseSchema = z.object({
   jobId: z.string().uuid(),
   tempoBpm: z.number().positive(),
   timeSignature: z.string(),
+  keySignature: z.string().default("C"),
   highestNote: z.string(),
   lowestNote: z.string(),
   repeatedSections: z.array(z.string()),
@@ -178,13 +183,18 @@ export const transcriberResultSchema = z.object({
   jobId: z.string().uuid(),
   tempoBpm: z.number().positive(),
   timeSignature: z.string(),
+  keySignature: z.string().default("C"),
   highestNote: z.string(),
   lowestNote: z.string(),
   repeatedSections: z.array(z.string()),
   benchmark: z.record(z.string(), z.number()),
   notesCount: z.number().int().nonnegative(),
+  warnings: z.array(z.string()).default([]),
   assets: z.array(transcriberAssetSchema),
   rawNotesPath: z.string().min(1).optional().nullable(),
+  debugNotesPath: z.string().min(1).optional().nullable(),
+  studyNotesPath: z.string().min(1).optional().nullable(),
+  modelInfo: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()])).optional().nullable(),
 });
 export type TranscriberResult = z.infer<typeof transcriberResultSchema>;
 

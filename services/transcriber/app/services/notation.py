@@ -41,6 +41,32 @@ class TimelineEntry:
     velocity: int = 64
 
 
+@dataclass(frozen=True)
+class NotationProfile:
+    name: str
+    study_confidence_cutoff: float = 0.60
+    study_min_duration_ql: float = 0.28
+    onset_merge_tolerance_ql: float = 0.08
+    overlap_merge_tolerance_ql: float = 0.05
+    max_debug_rh_polyphony: int = 3
+    max_debug_lh_polyphony: int = 2
+    max_study_rh_polyphony: int = 2
+    max_study_lh_polyphony: int = 1
+
+    def as_dict(self) -> dict[str, float | int | str]:
+        return {
+            "name": self.name,
+            "studyConfidenceCutoff": self.study_confidence_cutoff,
+            "studyMinDurationQl": self.study_min_duration_ql,
+            "onsetMergeToleranceQl": self.onset_merge_tolerance_ql,
+            "overlapMergeToleranceQl": self.overlap_merge_tolerance_ql,
+            "maxDebugRhPolyphony": self.max_debug_rh_polyphony,
+            "maxDebugLhPolyphony": self.max_debug_lh_polyphony,
+            "maxStudyRhPolyphony": self.max_study_rh_polyphony,
+            "maxStudyLhPolyphony": self.max_study_lh_polyphony,
+        }
+
+
 @dataclass
 class PreparedNotation:
     cleaned_events: list[NoteEvent]
@@ -52,6 +78,24 @@ class PreparedNotation:
     key_confidence: float
     warnings: list[str]
     metrics: dict[str, float]
+    profile_name: str
+    profile_settings: dict[str, float | int | str]
+
+
+def build_simple_piano_profile(
+    *,
+    study_confidence_cutoff: float = 0.60,
+    study_min_duration_ql: float = 0.28,
+    onset_merge_tolerance_ql: float = 0.08,
+    overlap_merge_tolerance_ql: float = 0.05,
+) -> NotationProfile:
+    return NotationProfile(
+        name="simple-piano",
+        study_confidence_cutoff=study_confidence_cutoff,
+        study_min_duration_ql=study_min_duration_ql,
+        onset_merge_tolerance_ql=onset_merge_tolerance_ql,
+        overlap_merge_tolerance_ql=overlap_merge_tolerance_ql,
+    )
 
 
 def prepare_notation(
@@ -61,26 +105,40 @@ def prepare_notation(
     time_signature: str,
     meter_confidence: float,
     beat_confidence: float,
+    profile: NotationProfile | None = None,
 ) -> PreparedNotation:
-    cleaned_events = cleanup_events(raw_events)
+    active_profile = profile or build_simple_piano_profile()
+    cleaned_events = cleanup_events(raw_events, profile=active_profile)
+    cleaned_events = suppress_register_outliers(cleaned_events)
     hand_assigned = assign_hands(cleaned_events)
+    hand_assigned = smooth_hand_assignments(hand_assigned)
 
     debug_source = [
         event
         for event in hand_assigned
-        if (event.confidence or 0.0) >= 0.18 and event.duration_ql >= 0.10
+        if (event.confidence or 0.0) >= max(0.22, active_profile.study_confidence_cutoff - 0.18)
+        and event.duration_ql >= max(0.10, active_profile.study_min_duration_ql - 0.08)
     ]
     study_source = [
         event
         for event in hand_assigned
-        if (event.confidence or 0.0) >= 0.34 and event.duration_ql >= 0.18
+        if (event.confidence or 0.0) >= active_profile.study_confidence_cutoff
+        and event.duration_ql >= active_profile.study_min_duration_ql
     ]
 
     debug_step = choose_grid_unit(debug_source, mode="debug")
     study_step = choose_grid_unit(study_source, mode="study")
+    if active_profile.name == "simple-piano":
+        study_step = max(study_step, 0.5)
+    if meter_confidence < 0.55:
+        study_step = max(study_step, 0.5)
 
-    debug_source = quantize_events_to_grid(debug_source, debug_step)
-    study_source = quantize_events_to_grid(study_source, study_step)
+    debug_source = trim_sustain_clutter(quantize_events_to_grid(debug_source, debug_step), time_signature, mode="debug")
+    study_source = trim_sustain_clutter(quantize_events_to_grid(study_source, study_step), time_signature, mode="study")
+    debug_source = cap_polyphony(debug_source, RIGHT_HAND, active_profile.max_debug_rh_polyphony)
+    debug_source = cap_polyphony(debug_source, LEFT_HAND, active_profile.max_debug_lh_polyphony)
+    study_source = cap_polyphony(study_source, RIGHT_HAND, active_profile.max_study_rh_polyphony)
+    study_source = cap_polyphony(study_source, LEFT_HAND, active_profile.max_study_lh_polyphony)
 
     debug_timelines = {
         RIGHT_HAND: build_hand_timeline(debug_source, RIGHT_HAND, debug_step, time_signature, mode="debug"),
@@ -152,10 +210,12 @@ def prepare_notation(
         key_confidence=key_confidence,
         warnings=warnings,
         metrics=metrics,
+        profile_name=active_profile.name,
+        profile_settings=active_profile.as_dict(),
     )
 
 
-def cleanup_events(events: list[NoteEvent]) -> list[NoteEvent]:
+def cleanup_events(events: list[NoteEvent], *, profile: NotationProfile) -> list[NoteEvent]:
     normalized: list[NoteEvent] = []
     for event in sorted(events, key=lambda item: (item.start_ql, item.pitch, -item.duration_ql)):
         if event.pitch < PIANO_LOW or event.pitch > PIANO_HIGH:
@@ -163,7 +223,7 @@ def cleanup_events(events: list[NoteEvent]) -> list[NoteEvent]:
         if not math.isfinite(event.start_ql) or not math.isfinite(event.duration_ql):
             continue
         duration = max(0.0, min(event.duration_ql, 8.0))
-        if duration < 0.05:
+        if duration < 0.08:
             continue
         normalized.append(
             NoteEvent(
@@ -171,24 +231,74 @@ def cleanup_events(events: list[NoteEvent]) -> list[NoteEvent]:
                 start_ql=round(max(event.start_ql, 0.0), 4),
                 duration_ql=round(duration, 4),
                 velocity=max(1, min(int(round(event.velocity)), 127)),
+                confidence=event.confidence,
+                start_sec=event.start_sec,
+                duration_sec=event.duration_sec,
             )
         )
 
-    snapped = snap_near_simultaneous_onsets(normalized, tolerance=0.08)
-    merged = merge_overlapping_duplicates(snapped, onset_tolerance=0.10, overlap_tolerance=0.05)
+    snapped = snap_near_simultaneous_onsets(normalized, tolerance=profile.onset_merge_tolerance_ql)
+    merged = merge_overlapping_duplicates(
+        snapped,
+        onset_tolerance=max(0.05, profile.onset_merge_tolerance_ql),
+        overlap_tolerance=max(0.03, profile.overlap_merge_tolerance_ql),
+    )
     annotated = annotate_confidence(merged)
 
     cleaned: list[NoteEvent] = []
     for event in annotated:
         confidence = event.confidence or 0.0
-        short_threshold = 0.10 if confidence >= 0.55 else 0.18
+        short_threshold = 0.10 if confidence >= 0.72 else profile.study_min_duration_ql
+        if event.pitch < 36 and event.duration_ql < 0.35 and confidence < 0.75:
+            continue
         if event.duration_ql < short_threshold and confidence < 0.55:
             continue
         cleaned.append(event)
 
     return annotate_confidence(
-        merge_overlapping_duplicates(cleaned, onset_tolerance=0.08, overlap_tolerance=0.03)
+        merge_overlapping_duplicates(
+            cleaned,
+            onset_tolerance=max(0.05, profile.onset_merge_tolerance_ql),
+            overlap_tolerance=max(0.03, profile.overlap_merge_tolerance_ql),
+        )
     )
+
+
+def smooth_hand_assignments(events: list[NoteEvent]) -> list[NoteEvent]:
+    if not events:
+        return []
+
+    smoothed: list[NoteEvent] = []
+    previous_by_pitch_class: dict[int, str] = {}
+    for event in events:
+        pitch_class = event.pitch % 12
+        assigned_hand = event.hand or RIGHT_HAND
+        previous_hand = previous_by_pitch_class.get(pitch_class)
+        if previous_hand and abs(event.pitch - 60) <= 4:
+            assigned_hand = previous_hand
+        if assigned_hand == LEFT_HAND and event.pitch >= 61:
+            assigned_hand = RIGHT_HAND
+        if assigned_hand == RIGHT_HAND and event.pitch <= 54:
+            assigned_hand = LEFT_HAND
+        previous_by_pitch_class[pitch_class] = assigned_hand
+        smoothed.append(replace(event, hand=assigned_hand))
+    return smoothed
+
+
+def suppress_register_outliers(events: list[NoteEvent]) -> list[NoteEvent]:
+    kept: list[NoteEvent] = []
+    for group in group_by_onset(events, tolerance=0.08):
+        if len(group) <= 1:
+            kept.extend(group)
+            continue
+        ordered = sorted(group, key=lambda event: event.pitch)
+        median_pitch = ordered[len(ordered) // 2].pitch
+        for event in ordered:
+            confidence = event.confidence or 0.0
+            if abs(event.pitch - median_pitch) >= 24 and confidence < 0.75 and event.duration_ql < 0.75:
+                continue
+            kept.append(event)
+    return sorted(kept, key=lambda item: (item.start_ql, item.pitch, -item.duration_ql))
 
 
 def snap_near_simultaneous_onsets(events: list[NoteEvent], tolerance: float) -> list[NoteEvent]:
@@ -243,6 +353,7 @@ def merge_overlapping_duplicates(
                     duration_ql=round(current_end - current.start_ql, 4),
                     velocity=max(current.velocity, event.velocity),
                     confidence=max(current.confidence or 0.0, event.confidence or 0.0) or None,
+                    duration_sec=max(current.duration_sec or 0.0, event.duration_sec or 0.0) or None,
                 )
                 continue
             merged.append(current)
@@ -264,7 +375,7 @@ def annotate_confidence(events: list[NoteEvent]) -> list[NoteEvent]:
         for event in group:
             velocity_score = clamp((event.velocity - 35) / 60.0, 0.0, 1.0)
             duration_score = clamp(event.duration_ql / 0.75, 0.0, 1.0)
-            register_score = 0.65 if event.pitch < 28 or event.pitch > 100 else 1.0
+            register_score = 0.4 if event.pitch < 36 or event.pitch > 96 else 0.7 if event.pitch < 40 or event.pitch > 92 else 1.0
             clutter_penalty = 1.0 / (1.0 + (0.18 * max(0, group_size - 4)))
             short_penalty = 0.7 if event.duration_ql < 0.18 else 1.0
             confidence = clamp(
@@ -301,6 +412,13 @@ def assign_hands(events: list[NoteEvent]) -> list[NoteEvent]:
         for event in ambiguous:
             right_cost = abs(event.pitch - right_center) * 0.8 + max(0.0, 60.0 - event.pitch) * 1.2
             left_cost = abs(event.pitch - left_center) * 0.8 + max(0.0, event.pitch - 60.0) * 1.2
+
+            if event.pitch >= 60:
+                right_cost -= 0.75
+                left_cost += 0.45
+            if event.pitch <= 55:
+                left_cost -= 0.75
+                right_cost += 0.45
 
             if left and event.pitch > max(item.pitch for item in left):
                 left_cost += 0.4
@@ -434,6 +552,44 @@ def quantize_events_to_grid(events: list[NoteEvent], step: float) -> list[NoteEv
     )
 
 
+def trim_sustain_clutter(events: list[NoteEvent], time_signature: str, *, mode: str) -> list[NoteEvent]:
+    if not events:
+        return []
+
+    bar_length = bar_length_quarter_length(time_signature)
+    trimmed: list[NoteEvent] = []
+    for event in events:
+        base_cap = bar_length if mode == "debug" else (2.0 if event.hand == RIGHT_HAND else 2.5)
+        if is_strong_position(event.start_ql, time_signature, 0.25) and (event.confidence or 0.0) >= 0.75:
+            base_cap += 0.5
+        trimmed.append(replace(event, duration_ql=min(event.duration_ql, base_cap)))
+    return merge_overlapping_duplicates(
+        sorted(trimmed, key=lambda item: (item.start_ql, item.pitch, -item.duration_ql)),
+        onset_tolerance=0.05,
+        overlap_tolerance=0.03,
+    )
+
+
+def cap_polyphony(events: list[NoteEvent], hand: str, limit: int) -> list[NoteEvent]:
+    if not events:
+        return []
+
+    kept: list[NoteEvent] = []
+    for group in group_by_onset(events, tolerance=0.001):
+        current_hand = [event for event in group if event.hand == hand]
+        other_hand = [event for event in group if event.hand != hand]
+        if hand == RIGHT_HAND:
+            ordered = sorted(current_hand, key=lambda event: (event.pitch, event.confidence or 0.0, event.velocity), reverse=True)
+        else:
+            ordered = sorted(current_hand, key=lambda event: (event.pitch, -(event.confidence or 0.0), -event.velocity))
+        kept.extend(ordered[:limit])
+        kept.extend(other_hand)
+    return sorted(
+        merge_overlapping_duplicates(kept, onset_tolerance=0.05, overlap_tolerance=0.03),
+        key=lambda item: (item.start_ql, item.pitch, -item.duration_ql),
+    )
+
+
 def select_debug_pitches(active: list[NoteEvent], hand: str, slot: float) -> list[int]:
     if not active:
         return []
@@ -478,13 +634,13 @@ def select_study_pitches(
         melody = ordered[0]
         selected = [melody.pitch]
 
-        if strong or len(ordered) <= 2:
+        if strong:
             harmony_pool = [
                 event.pitch
                 for event in ordered[1:]
-                if 3 <= (melody.pitch - event.pitch) <= 12 and event.pitch not in selected
+                if 3 <= (melody.pitch - event.pitch) <= 9 and event.pitch not in selected and (event.confidence or 0.0) >= 0.78
             ]
-            selected.extend(harmony_pool[:2])
+            selected.extend(harmony_pool[:1])
 
         if previous_pitches and not strong:
             sustained = [pitch for pitch in previous_pitches if any(event.pitch == pitch for event in active)]
@@ -506,7 +662,7 @@ def select_study_pitches(
         support_pool = [
             event.pitch
             for event in ordered[1:]
-            if 4 <= (event.pitch - bass.pitch) <= 12 and event.pitch not in selected
+            if 4 <= (event.pitch - bass.pitch) <= 9 and event.pitch not in selected and (event.confidence or 0.0) >= 0.8
         ]
         if support_pool:
             selected.append(
@@ -521,7 +677,7 @@ def select_study_pitches(
         if sustained:
             selected = [sustained[0]]
 
-    return sorted(selected)[:2]
+    return sorted(selected)[:1 if not strong else 2]
 
 
 def timeline_to_note_events(timelines: dict[str, list[TimelineEntry]]) -> list[NoteEvent]:

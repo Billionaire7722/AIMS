@@ -1,7 +1,9 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { MongooseModule } from "@nestjs/mongoose";
 import { buildEnvConfig, envValidation } from "./config/env.js";
-import { PrismaModule } from "./prisma/prisma.module.js";
+import { getAppEnv } from "./runtime/app-env.js";
+import { MongoModelsModule } from "./database/mongo-models.module.js";
 import { StorageModule } from "./storage/storage.module.js";
 import { WorkspaceBootstrapModule } from "./workspace/workspace-bootstrap.module.js";
 import { HealthModule } from "./modules/health/health.module.js";
@@ -20,7 +22,12 @@ import { TranscriberModule } from "./transcriber/transcriber.module.js";
       validate: envValidation,
       envFilePath: ["../../.env", "../../.env.local", ".env", ".env.local"],
     }),
-    PrismaModule,
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: getAppEnv().MONGODB_URI,
+      }),
+    }),
+    MongoModelsModule,
     StorageModule,
     WorkspaceBootstrapModule,
     TranscriberModule,

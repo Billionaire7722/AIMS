@@ -1,13 +1,14 @@
 import { Injectable, Logger, OnModuleInit, ServiceUnavailableException } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service.js";
+import { InjectConnection } from "@nestjs/mongoose";
 import IORedis from "ioredis";
+import type { Connection } from "mongoose";
 import { getAppEnv } from "./app-env.js";
 
 @Injectable()
 export class DependencyChecksService implements OnModuleInit {
   private readonly logger = new Logger(DependencyChecksService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@InjectConnection() private readonly connection: Connection) {}
 
   async onModuleInit() {
     await this.checkStartupDependencies(true);
@@ -18,9 +19,13 @@ export class DependencyChecksService implements OnModuleInit {
     const issues: string[] = [];
 
     try {
-      await this.prisma.$runCommandRaw({ ping: 1 });
+      const database = this.connection.db;
+      if (!database) {
+        throw new Error("Mongo connection is not ready.");
+      }
+      await database.admin().ping();
     } catch (error) {
-      issues.push(`MongoDB is unreachable for DATABASE_URL: ${this.describeError(error)}`);
+      issues.push(`MongoDB is unreachable for MONGODB_URI: ${this.describeError(error)}`);
     }
 
     const redis = new IORedis({

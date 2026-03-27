@@ -1,22 +1,19 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import type { CSSProperties, PointerEvent } from "react";
+import type { PointerEvent } from "react";
 import type { EditableScoreResponse, ScoreHand, ScoreNote, TranscriptionResultResponse } from "@aims/shared-types";
-import { measureLengthBeats, scoreToPlaybackEvents, scientificPitchToMidi } from "@aims/music-domain";
+import { measureLengthBeats, scientificPitchToMidi, scoreToPlaybackEvents } from "@aims/music-domain";
 import { saveEditableScore } from "./api";
 import { MeasureNotation } from "./MeasureNotation";
+import { noticeText, type Notice, useLanguage } from "./i18n";
 import {
   DURATION_OPTIONS,
-  addMeasureAfter,
   addNote,
   addRest,
   clearAssets,
   cloneScore,
-  duplicateMeasure,
   findNote,
-  getDurationLabel,
   measureForBeat,
   normalizeScore,
-  pitchFromMidi,
   removeNote,
   replaceNoteAccidental,
   replaceNoteDuration,
@@ -26,22 +23,24 @@ import {
   snapBeat,
   splitChord,
   mergeChord,
-  toggleRepeatEnd,
-  toggleRepeatStart,
   toggleTieStart,
   toggleTieStop,
   toSavePayload,
   type AccidentalPreference,
+  type DurationValue,
   type LoopMode,
   type Tool,
-  type DurationValue,
 } from "./scoreEditorUtils";
 
 type Props = {
   jobId: string;
+  fileName: string;
   result: TranscriptionResultResponse;
   initialScore: EditableScoreResponse;
+  debugScore: EditableScoreResponse;
 };
+
+type ViewMode = "study" | "debug";
 
 type HistoryState = {
   present: EditableScoreResponse;
@@ -71,25 +70,14 @@ type MeasureRange = {
   end: number;
 };
 
-const HAND_LABELS: Record<ScoreHand, string> = { rh: "RH", lh: "LH" };
-const ACCIDENTAL_LABELS: Record<AccidentalPreference, string> = {
-  natural: "Natural",
-  sharp: "Sharp",
-  flat: "Flat",
-};
-
-function clearScoreAssets(score: EditableScoreResponse): EditableScoreResponse {
-  return clearAssets(score);
-}
-
 function historyReducer(state: HistoryState, action: HistoryAction): HistoryState {
   switch (action.type) {
     case "commit":
-      return { present: normalizeScore(clearScoreAssets(action.next)), past: [...state.past, state.present], future: [] };
+      return { present: normalizeScore(clearAssets(action.next)), past: [...state.past, state.present], future: [] };
     case "replace":
-      return { ...state, present: normalizeScore(clearScoreAssets(action.next)) };
+      return { ...state, present: normalizeScore(clearAssets(action.next)) };
     case "reset":
-      return { present: normalizeScore(clearScoreAssets(action.next)), past: [], future: [] };
+      return { present: normalizeScore(clearAssets(action.next)), past: [], future: [] };
     case "undo":
       if (!state.past.length) return state;
       return { present: state.past[state.past.length - 1], past: state.past.slice(0, -1), future: [state.present, ...state.future] };
@@ -110,58 +98,11 @@ function measureNumberAtBeat(score: EditableScoreResponse, beat: number) {
   return measureForBeat(score, beat)?.number ?? score.measures[score.measures.length - 1]?.number ?? 1;
 }
 
-function rangeLabel(range: MeasureRange) {
-  return range.start === range.end ? `m.${range.start}` : `m.${range.start} - m.${range.end}`;
-}
-
-function roundBeat(value: number) {
-  return Math.max(0, Math.round(value * 1000) / 1000);
-}
-
-function groupNotes(notes: ScoreNote[]) {
-  const grouped = new Map<number, ScoreNote[]>();
-  for (const note of notes) {
-    const onset = roundBeat(note.startBeat);
-    const bucket = grouped.get(onset) ?? [];
-    bucket.push(note);
-    grouped.set(onset, bucket);
-  }
-  return Array.from(grouped.entries())
-    .map(([startBeat, bucket]) => ({
-      startBeat,
-      notes: bucket.sort((left, right) => left.midiValue - right.midiValue || left.id.localeCompare(right.id)),
-    }))
-    .sort((left, right) => left.startBeat - right.startBeat);
-}
-
-function notePositionPercent(note: ScoreNote, beatsPerMeasure: number) {
-  const beatFraction = beatsPerMeasure > 0 ? note.startBeat / beatsPerMeasure : 0;
-  return Math.max(0, Math.min(100, beatFraction * 100));
-}
-
-function noteHeightPercent(note: ScoreNote, index: number, count: number) {
-  const offset = count > 1 ? (index - (count - 1) / 2) * 10 : 0;
-  const base = note.hand === "rh" ? 22 : 68;
-  return Math.max(6, Math.min(88, base + offset));
-}
-
 function laneMidiFromPointer(hand: ScoreHand, yRatio: number) {
   const clamped = Math.max(0, Math.min(1, yRatio));
   const lowest = hand === "rh" ? 60 : 36;
   const highest = hand === "rh" ? 84 : 60;
   return Math.round(highest - clamped * (highest - lowest));
-}
-
-function findClosestNoteAtBeat(score: EditableScoreResponse, measureNumber: number, hand: ScoreHand, beat: number) {
-  const measure = score.measures.find((item) => item.number === measureNumber);
-  if (!measure) return null;
-  const notes = hand === "rh" ? measure.rightHandNotes : measure.leftHandNotes;
-  if (!notes.length) return null;
-  return [...notes].sort((left, right) => {
-    const leftDistance = Math.abs(left.startBeat - beat);
-    const rightDistance = Math.abs(right.startBeat - beat);
-    return leftDistance - rightDistance || left.midiValue - right.midiValue;
-  })[0];
 }
 
 function findNoteAtPlacement(
@@ -192,76 +133,94 @@ function pitchDraftFor(note: ScoreNote | null) {
   return note.pitch;
 }
 
-export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
+function scoreStats(score: EditableScoreResponse) {
+  const notes = score.measures.flatMap((measure) => [...measure.rightHandNotes, ...measure.leftHandNotes]).filter((note) => !note.isRest);
+  return {
+    noteCount: notes.length,
+  };
+}
+
+export function PianoScoreEditor({ jobId, fileName, result, initialScore, debugScore }: Props) {
+  const { t } = useLanguage();
   const [history, dispatch] = useReducer(historyReducer, {
-    present: normalizeScore(clearScoreAssets(initialScore)),
+    present: normalizeScore(clearAssets(initialScore)),
     past: [],
     future: [],
   });
-  const score = history.present;
-  const scoreRef = useRef(score);
-  const playbackRef = useRef<PlaybackState>({
-    isPlaying: false,
-    isPaused: false,
-    currentBeat: 0,
-    currentMeasure: score.measures[0]?.number ?? 1,
-    loopMode: "off",
-    metronome: false,
-    soundEnabled: true,
-  });
-  const audioRef = useRef<AudioContext | null>(null);
-  const timerRef = useRef<number | null>(null);
-  const playbackRangeRef = useRef<MeasureRange | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("study");
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
-  const [selectedMeasure, setSelectedMeasure] = useState(score.measures[0]?.number ?? 1);
+  const [selectedMeasure, setSelectedMeasure] = useState(initialScore.measures[0]?.number ?? 1);
   const [selectionAnchor, setSelectionAnchor] = useState<number | null>(null);
   const [tool, setTool] = useState<Tool>("select");
-  const [insertHand, setInsertHand] = useState<ScoreHand>("rh");
   const [duration, setDuration] = useState<DurationValue>(1);
   const [accidentalPreference, setAccidentalPreference] = useState<AccidentalPreference>("natural");
   const [pitchDraft, setPitchDraft] = useState("");
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [saveMessage, setSaveMessage] = useState<Notice | null>(null);
+  const [saveError, setSaveError] = useState<Notice | null>(null);
   const [playback, setPlayback] = useState<PlaybackState>({
     isPlaying: false,
     isPaused: false,
     currentBeat: 0,
-    currentMeasure: score.measures[0]?.number ?? 1,
+    currentMeasure: initialScore.measures[0]?.number ?? 1,
     loopMode: "off",
     metronome: false,
     soundEnabled: true,
   });
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [saveMessage, setSaveMessage] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const workingScore = history.present;
+  const activeScore = viewMode === "study" ? workingScore : debugScore;
+  const canEdit = viewMode === "study";
+  const workingScoreRef = useRef(workingScore);
+  const activeScoreRef = useRef(activeScore);
+  const playbackRef = useRef(playback);
+  const audioRef = useRef<AudioContext | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const playbackRangeRef = useRef<MeasureRange | null>(null);
 
   useEffect(() => {
-    scoreRef.current = score;
-  }, [score]);
+    dispatch({ type: "reset", next: normalizeScore(clearAssets(initialScore)) });
+    setSelectedMeasure(initialScore.measures[0]?.number ?? 1);
+    setSelectedNoteId(null);
+    setSelectionAnchor(null);
+    setViewMode("study");
+    setPitchDraft("");
+    setSaveState("idle");
+    setSaveMessage(null);
+    setSaveError(null);
+  }, [initialScore, jobId]);
+
+  useEffect(() => {
+    workingScoreRef.current = workingScore;
+  }, [workingScore]);
+
+  useEffect(() => {
+    activeScoreRef.current = activeScore;
+  }, [activeScore]);
 
   useEffect(() => {
     playbackRef.current = playback;
   }, [playback]);
 
   useEffect(() => {
-    if (!findNote(score, selectedNoteId)) {
+    if (!activeScore.measures.some((measure) => measure.number === selectedMeasure)) {
+      setSelectedMeasure(activeScore.measures[0]?.number ?? 1);
+    }
+    if (!findNote(activeScore, selectedNoteId)) {
       setSelectedNoteId(null);
     }
-    if (!score.measures.some((measure) => measure.number === selectedMeasure)) {
-      setSelectedMeasure(score.measures[score.measures.length - 1]?.number ?? 1);
-    }
-  }, [score, selectedMeasure, selectedNoteId]);
+  }, [activeScore, selectedMeasure, selectedNoteId]);
 
   useEffect(() => {
-    const selectedNote = findNote(score, selectedNoteId);
+    const selectedNote = findNote(activeScore, selectedNoteId);
     setPitchDraft(pitchDraftFor(selectedNote));
     if (selectedNote) {
       setSelectedMeasure(selectedNote.measureNumber);
     }
-  }, [score, selectedNoteId]);
+  }, [activeScore, selectedNoteId]);
 
   useEffect(() => {
-    return () => {
-      stopPlayback();
-    };
+    return () => stopPlayback();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -274,17 +233,32 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
       ) {
         return;
       }
+
       if (event.ctrlKey || event.metaKey) {
         if (event.key.toLowerCase() === "z") {
           event.preventDefault();
-          dispatch(event.shiftKey ? { type: "redo" } : { type: "undo" });
+          if (canEdit) {
+            dispatch(event.shiftKey ? { type: "redo" } : { type: "undo" });
+          }
           return;
         }
         if (event.key.toLowerCase() === "s") {
           event.preventDefault();
-          void handleSave();
+          if (canEdit) {
+            void handleSave();
+          }
           return;
         }
+      }
+
+      if (event.key === " ") {
+        event.preventDefault();
+        void togglePlayback();
+        return;
+      }
+
+      if (!canEdit) {
+        return;
       }
 
       if (event.key === "Backspace" || event.key === "Delete") {
@@ -312,11 +286,6 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
         changeDuration(1);
         return;
       }
-      if (event.key === " ") {
-        event.preventDefault();
-        void togglePlayback();
-        return;
-      }
       if (event.key.toLowerCase() === "n") {
         setTool("note");
         return;
@@ -332,9 +301,8 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [selectedNoteId, pitchDraft, duration, accidentalPreference, selectedMeasure, playback.isPlaying, playback.isPaused, playback.currentBeat]);
+  }, [canEdit]);
 
-  const selectedNote = useMemo(() => findNote(score, selectedNoteId), [score, selectedNoteId]);
   const selectedRange = useMemo(() => {
     if (selectionAnchor === null) return null;
     return {
@@ -343,66 +311,58 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
     };
   }, [selectionAnchor, selectedMeasure]);
 
+  const selectedNote = useMemo(() => findNote(activeScore, selectedNoteId), [activeScore, selectedNoteId]);
   const currentMeasure = playback.isPlaying ? playback.currentMeasure : selectedNote?.measureNumber ?? selectedMeasure;
-  const totalMeasures = score.measures.length;
-  const activeLoopRange =
-    playback.loopMode === "measure"
-      ? scoreToBeatRange(score, selectedMeasure)
-      : playback.loopMode === "range"
-        ? scoreToBeatRange(score, selectedRange ? selectedRange.start : selectedMeasure)
-        : null;
+  const totalMeasures = activeScore.measures.length;
   const dirty = history.past.length > 0;
-  const editedExportReady = Boolean(score.assets.musicxmlUrl || score.assets.midiUrl);
+  const topDraftAsset = result.assets.find((asset) => asset.mode === "study-friendly") ?? result.assets[0] ?? null;
+  const rawDraftAsset = result.assets.find((asset) => asset.mode === "original") ?? null;
+  const activeStats = scoreStats(activeScore);
 
   function commit(next: EditableScoreResponse) {
+    if (!canEdit) {
+      return;
+    }
     dispatch({ type: "commit", next });
     setSaveState("idle");
     setSaveMessage(null);
     setSaveError(null);
   }
 
-  function replace(next: EditableScoreResponse) {
-    dispatch({ type: "replace", next });
-    setSaveState("idle");
-    setSaveMessage(null);
-    setSaveError(null);
-  }
-
-  function reset(next: EditableScoreResponse) {
-    dispatch({ type: "reset", next });
-  }
-
-  function selectedMeasureScore() {
-    return score.measures.find((measure) => measure.number === selectedMeasure) ?? score.measures[0] ?? null;
-  }
-
-  function updateScoreMeta(updater: (draft: EditableScoreResponse) => EditableScoreResponse) {
-    commit(updater(cloneScore(scoreRef.current)));
-  }
-
-  function handleSelectNote(noteId: string, measureNumber: number) {
-    setSelectedNoteId(noteId);
-    setSelectedMeasure(measureNumber);
+  function setActiveView(nextView: ViewMode) {
+    setViewMode(nextView);
+    setSelectedNoteId(null);
+    setSelectionAnchor(null);
     setTool("select");
   }
 
-  function handleDelete() {
-    if (!selectedNoteId) {
-      const fallback = findClosestNoteAtBeat(scoreRef.current, selectedMeasure, insertHand, activeLoopRange?.start ?? 0);
-      if (fallback) {
-        commit(removeNote(scoreRef.current, fallback.id));
-      }
+  function handleSelectNote(noteId: string, measureNumber: number) {
+    if (canEdit && tool === "delete") {
+      commit(removeNote(workingScoreRef.current, noteId));
+      setSelectedNoteId(null);
+      setSelectedMeasure(measureNumber);
       return;
     }
-    commit(removeNote(scoreRef.current, selectedNoteId));
+    setSelectedNoteId(noteId);
+    setSelectedMeasure(measureNumber);
+    if (canEdit) {
+      setTool("select");
+    }
+  }
+
+  function handleDelete() {
+    if (!canEdit || !selectedNoteId) {
+      return;
+    }
+    commit(removeNote(workingScoreRef.current, selectedNoteId));
     setSelectedNoteId(null);
   }
 
   function changePitch(delta: number) {
-    if (!selectedNote) return;
+    if (!canEdit || !selectedNote) return;
     commit(
       replaceNotePitch(
-        scoreRef.current,
+        workingScoreRef.current,
         selectedNote.id,
         Math.max(0, Math.min(127, selectedNote.midiValue + delta)),
         accidentalPreference,
@@ -411,109 +371,71 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
   }
 
   function changeDuration(direction: number) {
-    if (!selectedNote) return;
-    const options = DURATION_OPTIONS.map((option) => option.value);
+    if (!canEdit || !selectedNote) return;
+    const options = DURATION_OPTIONS;
     const index = options.indexOf(selectedNote.durationBeats as DurationValue);
     const next = options[Math.max(0, Math.min(options.length - 1, index + direction))] ?? selectedNote.durationBeats;
-    commit(replaceNoteDuration(scoreRef.current, selectedNote.id, next));
+    commit(replaceNoteDuration(workingScoreRef.current, selectedNote.id, next));
   }
 
   function applyAccidental(next: AccidentalPreference) {
     setAccidentalPreference(next);
-    if (selectedNote) {
-      commit(replaceNoteAccidental(scoreRef.current, selectedNote.id, next));
+    if (canEdit && selectedNote) {
+      commit(replaceNoteAccidental(workingScoreRef.current, selectedNote.id, next));
     }
   }
 
   function handleMoveHand() {
-    if (!selectedNote) return;
+    if (!canEdit || !selectedNote) return;
     const nextHand = selectedNote.hand === "rh" ? "lh" : "rh";
-    commit(replaceNoteHand(scoreRef.current, selectedNote.id, nextHand));
-    setInsertHand(nextHand);
-  }
-
-  function handleMergeChord() {
-    if (!selectedNote) return;
-    commit(mergeChord(scoreRef.current, selectedNote.id));
-  }
-
-  function handleSplitChord() {
-    if (!selectedNote) return;
-    commit(splitChord(scoreRef.current, selectedNote.id));
-  }
-
-  function handleAddMeasure() {
-    commit(addMeasureAfter(scoreRef.current));
-  }
-
-  function handleDuplicateMeasure() {
-    commit(duplicateMeasure(scoreRef.current, selectedMeasure));
-  }
-
-  function handleRepeatStart() {
-    commit(toggleRepeatStart(scoreRef.current, selectedMeasure));
-  }
-
-  function handleRepeatEnd() {
-    commit(toggleRepeatEnd(scoreRef.current, selectedMeasure));
-  }
-
-  function handleMeasureClick(measureNumber: number, shiftKey: boolean) {
-    if (shiftKey) {
-      setSelectionAnchor((current) => current ?? measureNumber);
-    } else {
-      setSelectionAnchor(null);
-    }
-    setSelectedMeasure(measureNumber);
+    commit(replaceNoteHand(workingScoreRef.current, selectedNote.id, nextHand));
   }
 
   function handleLanePointerDown(measureNumber: number, hand: ScoreHand, event: PointerEvent<SVGRectElement>) {
+    if (!canEdit) {
+      return;
+    }
     event.preventDefault();
-    const measure = scoreRef.current.measures.find((item) => item.number === measureNumber);
+    const measure = workingScoreRef.current.measures.find((item) => item.number === measureNumber);
     if (!measure) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const xRatio = rect.width > 0 ? (event.clientX - rect.left) / rect.width : 0;
     const yRatio = rect.height > 0 ? (event.clientY - rect.top) / rect.height : 0;
     const beat = snapBeat(xRatio * measure.beatsPerMeasure, 0.25);
-    const durationBeats = duration;
     const midiValue = laneMidiFromPointer(hand, yRatio);
 
     if (tool === "delete") {
-      const note = findClosestNoteAtBeat(scoreRef.current, measureNumber, hand, beat);
-      if (note) {
-        commit(removeNote(scoreRef.current, note.id));
-      }
       return;
     }
 
     if (tool === "rest") {
-      const next = addRest(scoreRef.current, measureNumber, hand, beat, durationBeats);
+      const next = addRest(workingScoreRef.current, measureNumber, hand, beat, duration);
       commit(next);
-      const inserted = findNoteAtPlacement(next, measureNumber, hand, beat, durationBeats, 0, true);
+      const inserted = findNoteAtPlacement(next, measureNumber, hand, beat, duration, 0, true);
       setSelectedNoteId(inserted?.id ?? null);
       setSelectedMeasure(measureNumber);
       return;
     }
 
-    const next = addNote(scoreRef.current, measureNumber, hand, beat, durationBeats, midiValue, accidentalPreference);
+    const next = addNote(workingScoreRef.current, measureNumber, hand, beat, duration, midiValue, accidentalPreference);
     commit(next);
-    const inserted = findNoteAtPlacement(next, measureNumber, hand, beat, durationBeats, midiValue, false);
+    const inserted = findNoteAtPlacement(next, measureNumber, hand, beat, duration, midiValue, false);
     setSelectedNoteId(inserted?.id ?? null);
     setSelectedMeasure(measureNumber);
   }
 
   async function handleSave() {
     setSaveState("saving");
-    setSaveMessage("Saving edited score...");
+    setSaveMessage({ key: "savingEditedScore" });
     setSaveError(null);
     try {
-      const response = await saveEditableScore(jobId, toSavePayload(scoreRef.current));
-      reset(response);
+      const response = await saveEditableScore(jobId, toSavePayload(workingScoreRef.current));
+      dispatch({ type: "reset", next: response });
       setSaveState("saved");
-      setSaveMessage("Edited score saved and exports refreshed.");
+      setSaveMessage({ key: "editedScoreSaved" });
     } catch (error) {
       setSaveState("error");
-      setSaveError(error instanceof Error ? error.message : "Failed to save edited score.");
+      setSaveError(error instanceof Error ? { raw: error.message } : { key: "failedToSaveEditedScore" });
     }
   }
 
@@ -546,13 +468,13 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
   }
 
   async function startPlayback(startBeat?: number, rangeOverride?: MeasureRange) {
+    const scoreSnapshot = activeScoreRef.current;
     const context = new AudioContext();
     audioRef.current = context;
     if (context.state === "suspended") {
       await context.resume();
     }
 
-    const scoreSnapshot = scoreRef.current;
     const tempoBpm = Math.max(20, scoreSnapshot.tempoBpm);
     const totalBeats = getTotalBeats(scoreSnapshot);
     const range = rangeOverride ?? playbackRangeRef.current ?? { start: 0, end: totalBeats };
@@ -607,7 +529,7 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
     }));
 
     timerRef.current = window.setInterval(() => {
-      const liveScore = scoreRef.current;
+      const liveScore = activeScoreRef.current;
       const liveTempo = Math.max(20, liveScore.tempoBpm);
       const elapsedSeconds = context.currentTime - startedAt;
       const beat = effectiveStart + (elapsedSeconds * liveTempo) / 60;
@@ -635,17 +557,18 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
       return;
     }
 
+    const scoreSnapshot = activeScoreRef.current;
     const range =
       playback.loopMode === "measure"
-        ? scoreToBeatRange(scoreRef.current, selectedMeasure)
+        ? scoreToBeatRange(scoreSnapshot, selectedMeasure)
         : playback.loopMode === "range"
           ? selectedRange
             ? {
-                start: scoreToBeatRange(scoreRef.current, selectedRange.start).start,
-                end: scoreToBeatRange(scoreRef.current, selectedRange.end).end,
+                start: scoreToBeatRange(scoreSnapshot, selectedRange.start).start,
+                end: scoreToBeatRange(scoreSnapshot, selectedRange.end).end,
               }
-            : scoreToBeatRange(scoreRef.current, selectedMeasure)
-          : { start: 0, end: getTotalBeats(scoreRef.current) };
+            : scoreToBeatRange(scoreSnapshot, selectedMeasure)
+          : { start: 0, end: getTotalBeats(scoreSnapshot) };
 
     if (playback.isPaused) {
       await startPlayback(playback.currentBeat, range);
@@ -657,230 +580,160 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
 
   function handleStop() {
     stopPlayback();
-    setPlayback((current) => ({
-      ...current,
-      isPaused: false,
-    }));
+    setPlayback((current) => ({ ...current, isPaused: false }));
   }
 
   function handleTempoChange(value: number) {
-    updateScoreMeta((draft) => ({
-      ...draft,
-      tempoBpm: Math.max(20, Math.min(240, value)),
-    }));
-  }
-
-  function handleTimeSignatureChange(value: string) {
-    updateScoreMeta((draft) => ({
-      ...draft,
-      timeSignature: value,
-    }));
-  }
-
-  function handleKeySignatureChange(value: string) {
-    updateScoreMeta((draft) => ({
-      ...draft,
-      keySignature: value,
-    }));
+    if (!canEdit) return;
+    const next = cloneScore(workingScoreRef.current);
+    next.tempoBpm = Math.max(20, Math.min(240, value));
+    commit(next);
   }
 
   function handlePitchDraftApply() {
-    if (!selectedNote) return;
+    if (!canEdit || !selectedNote) return;
     const midiValue = scientificPitchToMidi(pitchDraft.trim());
     if (midiValue === null) {
-      setSaveError("Enter a valid scientific pitch like C#4.");
+      setSaveError({ key: "invalidPitch" });
       return;
     }
-    commit(replaceNotePitch(scoreRef.current, selectedNote.id, midiValue, accidentalPreference));
+    commit(replaceNotePitch(workingScoreRef.current, selectedNote.id, midiValue, accidentalPreference));
   }
 
-  function handlePlaybackModeToggle(mode: LoopMode) {
-    setPlayback((current) => ({ ...current, loopMode: current.loopMode === mode ? "off" : mode }));
-  }
-
-  const aiAssetLinks = result.assets.length ? result.assets : [];
+  const modeBadge = viewMode === "study" ? t.outputModes["study-friendly"] : t.outputModes.original;
+  const viewDescription = viewMode === "study" ? t.outputModeDescriptions["study-friendly"] : t.outputModeDescriptions.original;
+  const statusBadge = saveState === "saving"
+    ? t.editor.saveStatusSaving
+    : saveState === "saved"
+      ? t.editor.saveStatusSaved
+      : dirty
+        ? t.editor.saveStatusUnsaved
+        : t.editor.saveStatusReady;
 
   return (
-    <section className="editor-shell panel">
-      <header className="editor-header">
-        <div className="editor-title-block">
-          <p className="eyebrow">Editable score</p>
-          <h2>{score.title}</h2>
-          <div className="status-row">
-            <span className={`status-badge ${score.variant === "ai-draft" ? "draft" : "edited"}`}>
-              {score.variant === "ai-draft" ? "AI draft" : score.variant === "user-edited" ? "User edited" : "Final export"}
-            </span>
-            <span className="status-badge muted">{dirty ? "Unsaved edits" : "Saved"}</span>
-            <span className="status-badge muted">
-              Measure {currentMeasure}/{totalMeasures}
-            </span>
-            <span className="status-badge muted">{score.tempoBpm.toFixed(0)} BPM</span>
-            <span className="status-badge muted">{score.timeSignature}</span>
-            <span className="status-badge muted">{score.keySignature}</span>
+    <section className="editor-workspace">
+      <header className="workspace-topbar">
+        <div className="workspace-title">
+          <div>
+            <p className="section-label">{modeBadge}</p>
+            <h1>{fileName}</h1>
+          </div>
+          <div className="topbar-status">
+            <span className={`badge ${viewMode === "study" ? "success" : "muted"}`}>{modeBadge}</span>
+            <span className={`badge ${dirty ? "warning" : "muted"}`}>{statusBadge}</span>
+            <span className="badge muted">{t.measure.progressLabel(currentMeasure, totalMeasures)}</span>
           </div>
         </div>
-        <div className="editor-summary">
-          <div>
-            <span>AI result</span>
-            <strong>{result.tempoBpm.toFixed(1)} BPM</strong>
-          </div>
-          <div>
-            <span>Range</span>
-            <strong>
-              {result.lowestNote} - {result.highestNote}
-            </strong>
-          </div>
-          <div>
-            <span>Notes</span>
-            <strong>{result.notesCount}</strong>
-          </div>
+
+        <div className="topbar-actions">
+          {topDraftAsset ? (
+            <>
+              <a className="inline-link" href={topDraftAsset.musicxmlUrl} target="_blank" rel="noreferrer">Draft XML</a>
+              <a className="inline-link" href={topDraftAsset.midiUrl} target="_blank" rel="noreferrer">Draft MIDI</a>
+            </>
+          ) : null}
+          {workingScore.assets.musicxmlUrl ? <a className="inline-link" href={workingScore.assets.musicxmlUrl} target="_blank" rel="noreferrer">Edited XML</a> : null}
+          {workingScore.assets.midiUrl ? <a className="inline-link" href={workingScore.assets.midiUrl} target="_blank" rel="noreferrer">Edited MIDI</a> : null}
+          <button type="button" className="primary-action" onClick={() => void handleSave()} disabled={!canEdit || saveState === "saving"}>
+            {saveState === "saving" ? t.editor.saveStatusSaving : t.editor.saveEditedScore}
+          </button>
         </div>
       </header>
 
-      <div className="editor-grid">
-        <aside className="tool-panel">
-          <div className="panel-section">
-            <h3>Note tools</h3>
-            <div className="tool-stack">
-              <button type="button" className={tool === "select" ? "active" : ""} onClick={() => setTool("select")}>Select</button>
-              <button type="button" className={tool === "note" ? "active" : ""} onClick={() => setTool("note")}>Note insertion</button>
-              <button type="button" className={tool === "rest" ? "active" : ""} onClick={() => setTool("rest")}>Rest insertion</button>
-              <button type="button" className={tool === "delete" ? "active" : ""} onClick={() => setTool("delete")}>Delete tool</button>
+      <div className="workspace-grid">
+        <aside className="workspace-sidebar">
+          <section className="panel-section">
+            <h2>{t.common.status}</h2>
+            <div className="data-list compact">
+              <div><span>{t.app.fileLabel}</span><strong>{fileName}</strong></div>
+              <div><span>{t.app.transcriptionModeLabel}</span><strong>{t.outputModes["study-friendly"]}</strong></div>
+              <div><span>{t.common.tempo}</span><strong>{Math.round(result.tempoBpm)} BPM</strong></div>
+              <div><span>{t.common.range}</span><strong>{result.lowestNote} - {result.highestNote}</strong></div>
+              <div><span>{t.common.notes}</span><strong>{result.notesCount}</strong></div>
             </div>
-          </div>
+          </section>
 
-          <div className="panel-section">
-            <h3>Accidentals</h3>
-            <div className="chip-grid">
-              {(Object.keys(ACCIDENTAL_LABELS) as AccidentalPreference[]).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  className={accidentalPreference === option ? "active" : ""}
-                  onClick={() => applyAccidental(option)}
-                >
-                  {ACCIDENTAL_LABELS[option]}
+          <section className="panel-section">
+            <h2>{t.app.workspaceHeading}</h2>
+            <div className="segmented-control">
+              <button type="button" className={viewMode === "study" ? "active" : ""} onClick={() => setActiveView("study")}>{t.outputModes["study-friendly"]}</button>
+              <button type="button" className={viewMode === "debug" ? "active" : ""} onClick={() => setActiveView("debug")}>{t.outputModes.original}</button>
+            </div>
+            <p className="hint">{viewDescription}</p>
+          </section>
+
+          <section className="panel-section">
+            <h2>{t.editor.noteToolsHeading}</h2>
+            <div className="segmented-control stacked">
+              <button type="button" className={tool === "select" ? "active" : ""} onClick={() => setTool("select")} disabled={!canEdit}>{t.editor.selectTool}</button>
+              <button type="button" className={tool === "note" ? "active" : ""} onClick={() => setTool("note")} disabled={!canEdit}>{t.editor.noteInsertion}</button>
+              <button type="button" className={tool === "rest" ? "active" : ""} onClick={() => setTool("rest")} disabled={!canEdit}>{t.editor.restInsertion}</button>
+              <button type="button" className={tool === "delete" ? "active" : ""} onClick={() => setTool("delete")} disabled={!canEdit}>{t.editor.deleteTool}</button>
+            </div>
+          </section>
+
+          <section className="panel-section">
+            <h2>{t.editor.durationLabel}</h2>
+            <label className="compact-field">
+              <span>{t.editor.durationLabel}</span>
+              <select value={duration} onChange={(event) => setDuration(Number(event.target.value) as DurationValue)} disabled={!canEdit}>
+                {DURATION_OPTIONS.map((value) => <option key={value} value={value}>{t.durations[value]}</option>)}
+              </select>
+            </label>
+            <div className="segmented-control stacked">
+              {(Object.keys(t.accidentals) as AccidentalPreference[]).map((option) => (
+                <button key={option} type="button" className={accidentalPreference === option ? "active" : ""} onClick={() => applyAccidental(option)} disabled={!canEdit}>
+                  {t.accidentals[option]}
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
-          <div className="panel-section">
-            <h3>Ties and chords</h3>
-            <div className="tool-stack">
-              <button type="button" disabled={!selectedNote} onClick={() => selectedNote && commit(toggleTieStart(scoreRef.current, selectedNote.id))}>Toggle tie start</button>
-              <button type="button" disabled={!selectedNote} onClick={() => selectedNote && commit(toggleTieStop(scoreRef.current, selectedNote.id))}>Toggle tie stop</button>
-              <button type="button" disabled={!selectedNote} onClick={handleMergeChord}>Merge chord</button>
-              <button type="button" disabled={!selectedNote} onClick={handleSplitChord}>Split chord</button>
-              <button type="button" disabled={!selectedNote} onClick={handleMoveHand}>Move to {selectedNote?.hand === "rh" ? "LH" : "RH"}</button>
-            </div>
-          </div>
-
-          <div className="panel-section">
-            <h3>Selected note</h3>
-            <div className="selection-card">
-              <p className="selection-summary">
-                {selectedNote ? `${selectedNote.pitch} | m.${selectedNote.measureNumber} | ${HAND_LABELS[selectedNote.hand]}` : "No note selected."}
-              </p>
-              {selectedNote ? (
-                <>
-                  <p className="hint">Source: {selectedNote.source === "ai" ? "AI draft" : "User edit"}</p>
-                  <p className="hint">Confidence: {selectedNote.confidence ?? 1}</p>
-                  <div className="inline-field">
-                    <label>
-                      Pitch
-                      <input value={pitchDraft} onChange={(event) => setPitchDraft(event.target.value)} onBlur={handlePitchDraftApply} placeholder="C#4" />
-                    </label>
-                    <button type="button" onClick={handlePitchDraftApply}>Apply</button>
-                  </div>
-                  <div className="inline-field">
-                    <label>
-                      Duration
-                      <select
-                        value={selectedNote.durationBeats}
-                        onChange={(event) => commit(replaceNoteDuration(scoreRef.current, selectedNote.id, Number(event.target.value)))}
-                      >
-                        {DURATION_OPTIONS.map((option) => (
-                          <option key={option.value} value={option.value}>{option.label}</option>
-                        ))}
-                      </select>
-                    </label>
-                    <button type="button" onClick={() => changeDuration(1)}>Longer</button>
-                    <button type="button" onClick={() => changeDuration(-1)}>Shorter</button>
-                  </div>
-                  <div className="tool-stack">
-                    <button type="button" onClick={() => changePitch(1)}>Pitch up</button>
-                    <button type="button" onClick={() => changePitch(-1)}>Pitch down</button>
-                    <button type="button" onClick={handleDelete}>Delete selected</button>
-                  </div>
-                </>
-              ) : null}
-            </div>
-          </div>
+          {(saveMessage || saveError) ? (
+            <section className="panel-section">
+              {saveMessage ? <p className="inline-message success">{noticeText(saveMessage, t)}</p> : null}
+              {saveError ? <p className="inline-message error">{noticeText(saveError, t)}</p> : null}
+            </section>
+          ) : null}
         </aside>
 
-        <section className="editor-stage">
-          <div className="top-toolbar">
-            <label>
-              Time signature
-              <input value={score.timeSignature} onChange={(event) => handleTimeSignatureChange(event.target.value)} placeholder="4/4" />
-            </label>
-            <label>
-              Key signature
-              <input value={score.keySignature} onChange={(event) => handleKeySignatureChange(event.target.value)} placeholder="C" />
-            </label>
-            <label>
-              Tempo
-              <input type="number" min="20" max="240" value={Math.round(score.tempoBpm)} onChange={(event) => handleTempoChange(Number(event.target.value))} />
-            </label>
-            <div className="toolbar-actions">
-              <button type="button" onClick={handleAddMeasure}>Add measure</button>
-              <button type="button" onClick={handleDuplicateMeasure}>Duplicate measure</button>
-              <button type="button" onClick={handleRepeatStart}>{selectedMeasureScore()?.repeatStart ? "Clear repeat start" : "Set repeat start"}</button>
-              <button type="button" onClick={handleRepeatEnd}>{selectedMeasureScore()?.repeatEnd ? "Clear repeat end" : "Set repeat end"}</button>
-            </div>
-          </div>
-
-          <div className="measure-tools">
-            <button type="button" onClick={() => setSelectedMeasure(Math.max(1, selectedMeasure - 1))} disabled={selectedMeasure <= 1}>Previous measure</button>
-            <button type="button" onClick={() => setSelectedMeasure(Math.min(totalMeasures, selectedMeasure + 1))} disabled={selectedMeasure >= totalMeasures}>Next measure</button>
-            <button type="button" onClick={() => setInsertHand((value) => (value === "rh" ? "lh" : "rh"))}>Insert {insertHand === "rh" ? "LH" : "RH"}</button>
-            <button type="button" className={playback.loopMode === "measure" ? "active" : ""} onClick={() => setPlayback((value) => ({ ...value, loopMode: value.loopMode === "measure" ? "off" : "measure" }))}>Loop current measure</button>
-            <button type="button" className={playback.loopMode === "range" ? "active" : ""} onClick={() => handlePlaybackModeToggle("range")}>Loop selection</button>
-          </div>
-
-          <div className="score-status-row">
+        <main className="workspace-main">
+          <div className="workspace-banner">
             <div>
-              <strong>{selectedRange ? rangeLabel(selectedRange) : `m.${selectedMeasure}`}</strong>
-              <p className="hint">
-                {selectionAnchor === null ? "Shift-click measure headers to create a loop range." : "Selection anchor set for looping."}
-              </p>
+              <strong>{modeBadge}</strong>
+              <p>{viewDescription}</p>
             </div>
-            <div className="score-status">
-              <span>{saveState === "saving" ? "Saving..." : saveState === "saved" ? "Saved" : dirty ? "Unsaved edits" : "Ready"}</span>
-              {saveMessage ? <p className="hint">{saveMessage}</p> : null}
-              {saveError ? <p className="error">{saveError}</p> : null}
+            <div className="measure-nav">
+              <button type="button" onClick={() => setSelectedMeasure(Math.max(1, selectedMeasure - 1))} disabled={selectedMeasure <= 1}>{t.editor.previousMeasure}</button>
+              <button type="button" className="measure-pill" onClick={() => setSelectionAnchor(null)}>
+                {t.measure.rangeLabel(selectedRange?.start ?? selectedMeasure, selectedRange?.end ?? selectedMeasure)}
+              </button>
+              <button type="button" onClick={() => setSelectedMeasure(Math.min(totalMeasures, selectedMeasure + 1))} disabled={selectedMeasure >= totalMeasures}>{t.editor.nextMeasure}</button>
             </div>
           </div>
+
+          {result.warnings.length > 0 ? <div className="warning-strip">{result.warnings.map((warning) => <p key={warning}>{warning}</p>)}</div> : null}
 
           <div className="score-strip">
-            {score.measures.map((measure) => {
+            {activeScore.measures.map((measure) => {
               const isSelected = measure.number === selectedMeasure;
               const isActive = measure.number === currentMeasure;
               const isInRange = selectedRange ? measure.number >= selectedRange.start && measure.number <= selectedRange.end : false;
               return (
-                <article
-                  key={measure.number}
-                  className={`measure-card ${isSelected ? "selected" : ""} ${isActive ? "playing" : ""} ${isInRange ? "range" : ""}`}
-                >
-                  <button type="button" className="measure-header" onClick={(event) => handleMeasureClick(measure.number, event.shiftKey)}>
-                    <span>Measure {measure.number}</span>
-                    <span className="measure-meta">
-                      {measure.barline !== "single" ? measure.barline : measure.repeatStart ? "repeat start" : measure.repeatEnd ? "repeat end" : "single"}
-                    </span>
+                <article key={`${viewMode}-${measure.number}`} className={`measure-card ${isSelected ? "selected" : ""} ${isActive ? "playing" : ""} ${isInRange ? "range" : ""}`}>
+                  <button type="button" className="measure-header" onClick={(event) => {
+                    if (event.shiftKey) {
+                      setSelectionAnchor((current) => current ?? measure.number);
+                    } else {
+                      setSelectionAnchor(null);
+                    }
+                    setSelectedMeasure(measure.number);
+                  }}>
+                    <span>{t.measure.label} {measure.number}</span>
+                    <span className="measure-meta">{measure.timeSignature}</span>
                   </button>
                   <MeasureNotation
-                    score={score}
+                    score={activeScore}
                     measure={measure}
                     selectedNoteId={selectedNoteId}
                     tool={tool}
@@ -893,75 +746,101 @@ export function PianoScoreEditor({ jobId, result, initialScore }: Props) {
               );
             })}
           </div>
-        </section>
+        </main>
+
+        <aside className="workspace-inspector">
+          <section className="panel-section">
+            <h2>{t.common.status}</h2>
+            <div className="data-list compact">
+              <div><span>{t.common.tempo}</span><strong>{Math.round(activeScore.tempoBpm)} BPM</strong></div>
+              <div><span>{t.common.notes}</span><strong>{activeStats.noteCount}</strong></div>
+              <div><span>{t.common.range}</span><strong>{result.lowestNote} - {result.highestNote}</strong></div>
+              <div><span>{t.editor.keySignatureLabel}</span><strong>{result.keySignature}</strong></div>
+            </div>
+          </section>
+
+          <section className="panel-section">
+            <h2>{t.editor.selectedNoteHeading}</h2>
+            {!selectedNote ? (
+              <p className="hint">{t.editor.noNoteSelected}</p>
+            ) : (
+              <>
+                <div className="data-list compact">
+                  <div><span>{t.editor.pitchLabel}</span><strong>{selectedNote.pitch}</strong></div>
+                  <div><span>{t.editor.durationLabel}</span><strong>{t.durations[selectedNote.durationBeats as DurationValue] ?? selectedNote.durationBeats}</strong></div>
+                  <div><span>{t.hands[selectedNote.hand]}</span><strong>{t.measure.label} {selectedNote.measureNumber}</strong></div>
+                  <div><span>{t.editor.sourceLabel}</span><strong>{t.sources[selectedNote.source]}</strong></div>
+                </div>
+
+                {canEdit ? (
+                  <>
+                    <label className="compact-field">
+                      <span>{t.editor.pitchLabel}</span>
+                      <input value={pitchDraft} onChange={(event) => setPitchDraft(event.target.value)} onBlur={handlePitchDraftApply} placeholder="C#4" />
+                    </label>
+                    <label className="compact-field">
+                      <span>{t.editor.durationLabel}</span>
+                      <select value={selectedNote.durationBeats} onChange={(event) => commit(replaceNoteDuration(workingScoreRef.current, selectedNote.id, Number(event.target.value)))}>
+                        {DURATION_OPTIONS.map((value) => <option key={value} value={value}>{t.durations[value]}</option>)}
+                      </select>
+                    </label>
+                    <div className="segmented-control stacked">
+                      <button type="button" onClick={() => changePitch(1)}>{t.editor.pitchUp}</button>
+                      <button type="button" onClick={() => changePitch(-1)}>{t.editor.pitchDown}</button>
+                      <button type="button" onClick={() => changeDuration(1)}>{t.editor.longerButton}</button>
+                      <button type="button" onClick={() => changeDuration(-1)}>{t.editor.shorterButton}</button>
+                      <button type="button" onClick={handleMoveHand}>{t.editor.moveToHand(selectedNote.hand)}</button>
+                      <button type="button" onClick={() => commit(toggleTieStart(workingScoreRef.current, selectedNote.id))}>{t.editor.toggleTieStart}</button>
+                      <button type="button" onClick={() => commit(toggleTieStop(workingScoreRef.current, selectedNote.id))}>{t.editor.toggleTieStop}</button>
+                      <button type="button" onClick={() => commit(mergeChord(workingScoreRef.current, selectedNote.id))}>{t.editor.mergeChord}</button>
+                      <button type="button" onClick={() => commit(splitChord(workingScoreRef.current, selectedNote.id))}>{t.editor.splitChord}</button>
+                      <button type="button" onClick={handleDelete}>{t.editor.deleteSelected}</button>
+                    </div>
+                  </>
+                ) : (
+                  <p className="hint">{t.outputModeDescriptions.original}</p>
+                )}
+              </>
+            )}
+          </section>
+
+          {rawDraftAsset ? (
+            <section className="panel-section">
+              <h2>{t.editor.aiDraftAssetsHeading}</h2>
+              <div className="inline-actions">
+                <a className="inline-link" href={rawDraftAsset.musicxmlUrl} target="_blank" rel="noreferrer">Raw XML</a>
+                <a className="inline-link" href={rawDraftAsset.midiUrl} target="_blank" rel="noreferrer">Raw MIDI</a>
+              </div>
+            </section>
+          ) : null}
+        </aside>
       </div>
 
       <footer className="transport-bar">
-        <div className="transport-group">
-          <button type="button" onClick={() => void togglePlayback()}>{playback.isPlaying ? "Pause" : playback.isPaused ? "Resume" : "Play"}</button>
-          <button type="button" onClick={pausePlayback} disabled={!playback.isPlaying}>Pause</button>
-          <button type="button" onClick={handleStop}>Stop</button>
+        <div className="transport-cluster">
+          <button type="button" onClick={() => void togglePlayback()}>{playback.isPlaying ? t.editor.transportPause : playback.isPaused ? t.editor.transportResume : t.editor.transportPlay}</button>
+          <button type="button" onClick={pausePlayback} disabled={!playback.isPlaying}>{t.editor.transportPause}</button>
+          <button type="button" onClick={handleStop}>{t.editor.transportStop}</button>
         </div>
 
-        <div className="transport-group transport-inline">
-          <label>
-            Tempo
-            <input type="number" min="20" max="240" value={Math.round(score.tempoBpm)} onChange={(event) => handleTempoChange(Number(event.target.value))} />
+        <div className="transport-cluster">
+          <button type="button" className={playback.loopMode === "measure" ? "active" : ""} onClick={() => setPlayback((current) => ({ ...current, loopMode: current.loopMode === "measure" ? "off" : "measure" }))}>{t.editor.loopCurrentMeasure}</button>
+          <button type="button" className={playback.loopMode === "range" ? "active" : ""} onClick={() => setPlayback((current) => ({ ...current, loopMode: current.loopMode === "range" ? "off" : "range" }))}>{t.editor.loopSelection}</button>
+          <button type="button" className={playback.metronome ? "active" : ""} onClick={() => setPlayback((current) => ({ ...current, metronome: !current.metronome }))}>{t.editor.transportMetronome}</button>
+        </div>
+
+        <div className="transport-cluster">
+          <label className="transport-field">
+            <span>{t.editor.transportTempoLabel}</span>
+            <input type="number" min="20" max="240" value={Math.round(activeScore.tempoBpm)} onChange={(event) => handleTempoChange(Number(event.target.value))} disabled={!canEdit} />
           </label>
-          <button type="button" className={playback.metronome ? "active" : ""} onClick={() => setPlayback((current) => ({ ...current, metronome: !current.metronome }))}>Metronome</button>
-          <button type="button" className={playback.soundEnabled ? "active" : ""} onClick={() => setPlayback((current) => ({ ...current, soundEnabled: !current.soundEnabled }))}>Piano sound</button>
-        </div>
-
-        <div className="transport-group">
-          <button type="button" onClick={handleSave} disabled={saveState === "saving"}>{saveState === "saving" ? "Saving..." : "Save edited score"}</button>
+          <button type="button" className={playback.soundEnabled ? "active" : ""} onClick={() => setPlayback((current) => ({ ...current, soundEnabled: !current.soundEnabled }))}>{t.editor.transportPianoSound}</button>
           <div className="transport-readout">
-            <span>Beat {playback.currentBeat.toFixed(2)} | Measure {playback.currentMeasure}</span>
-            <span>{playback.isPlaying ? "Playing" : playback.isPaused ? "Paused" : "Stopped"}</span>
+            <strong>{t.editor.transportReadout(playback.currentBeat, playback.currentMeasure)}</strong>
+            <span>{playback.isPlaying ? t.editor.transportPlaying : playback.isPaused ? t.editor.transportPaused : t.editor.transportStopped}</span>
           </div>
         </div>
       </footer>
-
-      <section className="editor-footnotes">
-        <div className="export-card">
-          <h3>Edited export</h3>
-          <p className="hint">Save regenerates MusicXML and MIDI from the internal editable score model.</p>
-          <div className="downloads">
-            {editedExportReady ? (
-              <>
-                <a href={score.assets.musicxmlUrl ?? undefined} target="_blank" rel="noreferrer">Download edited MusicXML</a>
-                <a href={score.assets.midiUrl ?? undefined} target="_blank" rel="noreferrer">Download edited MIDI</a>
-              </>
-            ) : (
-              <span className="hint">No edited export yet. Save the score to generate files.</span>
-            )}
-          </div>
-        </div>
-
-        <div className="export-card">
-          <h3>AI draft assets</h3>
-          <p className="hint">The draft transcription remains available separately from the edited version.</p>
-          <div className="downloads">
-            {aiAssetLinks.map((asset) => (
-              <span key={asset.mode} className="draft-link-set">
-                <a href={asset.musicxmlUrl} target="_blank" rel="noreferrer">{asset.mode === "study-friendly" ? "Study-friendly" : "Raw"} MusicXML</a>
-                <a href={asset.midiUrl} target="_blank" rel="noreferrer">{asset.mode === "study-friendly" ? "Study-friendly" : "Raw"} MIDI</a>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="shortcut-card">
-          <h3>Shortcuts</h3>
-          <ul>
-            <li>Cmd/Ctrl+S save</li>
-            <li>Cmd/Ctrl+Z undo</li>
-            <li>Cmd/Ctrl+Shift+Z redo</li>
-            <li>Arrow keys change pitch or duration</li>
-            <li>N note, R rest, D delete</li>
-            <li>Space play or pause</li>
-          </ul>
-        </div>
-      </section>
     </section>
   );
 }

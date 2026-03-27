@@ -1,0 +1,178 @@
+[
+  {
+    "pitch": 58,
+    "startQl": 0.0,
+    "durationQl": 0.5,
+    "velocity": 67,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 74,
+    "startQl": 0.0,
+    "durationQl": 0.5,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 79,
+    "startQl": 0.0,
+    "durationQl": 0.5,
+    "velocity": 80,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 35,
+    "startQl": 0.5,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "startQl": 0.5,
+    "durationQl": 0.5,
+    "velocity": 95,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 33,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 61,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 40,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 61,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 62,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 95,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 65,
+    "startQl": 1.0,
+    "durationQl": 0.5,
+    "velocity": 95,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 33,
+    "startQl": 1.5,
+    "durationQl": 1.0,
+    "velocity": 62,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "startQl": 1.5,
+    "durationQl": 0.5,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 69,
+    "startQl": 1.5,
+    "durationQl": 0.5,
+    "velocity": 90,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 65,
+    "startQl": 2.0,
+    "durationQl": 0.5,
+    "velocity": 95,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 35,
+    "startQl": 2.5,
+    "durationQl": 0.5,
+    "velocity": 57,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 65,
+    "startQl": 2.5,
+    "durationQl": 0.5,
+    "velocity": 74,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 67,
+    "startQl": 2.5,
+    "durationQl": 0.5,
+    "velocity": 74,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 74,
+    "startQl": 2.5,
+    "durationQl": 0.5,
+    "velocity": 74,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 45,
+    "startQl": 3.0,
+    "durationQl": 0.5,
+    "velocity": 55,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 70,
+    "startQl": 3.0,
+    "durationQl": 0.5,
+    "velocity": 52,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 33,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "lh"
+  },
+  {
+    "pitch": 67,
+    "startQl": 3.5,
+    "durationQl": 0.5,
+    "velocity": 60,
+    "confidence": 1.0,
+    "hand": "rh"
+  },
+  {
+    "pitch": 52,
+    "startQl": 4.0,
+    "durationQl": 0.5,
+    "velocity": 92,
+    "confidence": 1.0,
+    "hand": "lh"
+  }
+]

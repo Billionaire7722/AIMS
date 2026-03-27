@@ -2,8 +2,6 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from pymongo import MongoClient
-
 from app.core.config import Settings
 
 
@@ -43,18 +41,6 @@ def check_runtime_dependencies(settings: Settings) -> None:
         directory.mkdir(parents=True, exist_ok=True)
         if not directory.exists():
             raise DependencyError(f"Required directory could not be created: {directory}")
-
-    database_url = settings.database_url.strip()
-    if not database_url:
-        raise DependencyError("DATABASE_URL is not set. Provide the MongoDB connection string used by the API.")
-
-    client = MongoClient(database_url, serverSelectionTimeoutMS=5000)
-    try:
-        client.admin.command("ping")
-    except Exception as error:
-        raise DependencyError(f"MongoDB is unreachable for DATABASE_URL: {error}") from error
-    finally:
-        client.close()
 
     _run_check(settings.ffmpeg_path, ["-version"], "FFmpeg")
     _run_check(settings.aria_amt_bin, ["--help"], "aria-amt")

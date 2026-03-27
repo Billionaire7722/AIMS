@@ -11,13 +11,7 @@ export type AccidentalPreference = "natural" | "sharp" | "flat";
 export type LoopMode = "off" | "measure" | "range";
 export type DurationValue = 4 | 2 | 1 | 0.5 | 0.25;
 
-export const DURATION_OPTIONS: Array<{ label: string; value: DurationValue }> = [
-  { label: "Whole", value: 4 },
-  { label: "Half", value: 2 },
-  { label: "Quarter", value: 1 },
-  { label: "Eighth", value: 0.5 },
-  { label: "16th", value: 0.25 },
-];
+export const DURATION_OPTIONS: DurationValue[] = [4, 2, 1, 0.5, 0.25];
 
 const SHARP_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const FLAT_NAMES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];

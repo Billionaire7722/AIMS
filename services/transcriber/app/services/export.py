@@ -54,7 +54,9 @@ def build_piano_score(
 
     score.makeMeasures(inPlace=True)
     score.makeTies(inPlace=True)
-    score.makeBeams(inPlace=True)
+    # music21 cannot beam a score-level stream once measures exist, so beam
+    # each generated measure individually and skip any unusual measure safely.
+    apply_measure_beams(score)
     score.makeAccidentals(inPlace=True)
     return score
 
@@ -68,6 +70,15 @@ def append_timeline(
     for entry in timeline:
         element = build_element(entry, key_signature, hand)
         part.append(element)
+
+
+def apply_measure_beams(score: music21.stream.Score) -> None:
+    for part in score.parts:
+        for measure in part.getElementsByClass(music21.stream.Measure):
+            try:
+                measure.makeBeams(inPlace=True)
+            except music21.exceptions21.StreamException:
+                continue
 
 
 def build_element(
@@ -107,13 +118,19 @@ def score_to_json(events: list[NoteEvent]) -> list[dict[str, float | int | str]]
     for event in events:
         item: dict[str, float | int | str] = {
             "pitch": event.pitch,
+            "pitchName": music21.pitch.Pitch(event.pitch).nameWithOctave,
             "startQl": event.start_ql,
             "durationQl": event.duration_ql,
             "velocity": event.velocity,
         }
+        if event.start_sec is not None:
+            item["startSec"] = round(event.start_sec, 6)
+            item["endSec"] = round(event.start_sec + (event.duration_sec or 0.0), 6)
+        if event.duration_sec is not None:
+            item["durationSec"] = round(event.duration_sec, 6)
         if event.confidence is not None:
             item["confidence"] = round(event.confidence, 4)
         if event.hand:
-            item["hand"] = event.hand
+            item["hand"] = "rh" if event.hand == RIGHT_HAND else "lh"
         payload.append(item)
     return payload
