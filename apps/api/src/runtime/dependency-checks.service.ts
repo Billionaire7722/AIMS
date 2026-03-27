@@ -18,9 +18,9 @@ export class DependencyChecksService implements OnModuleInit {
     const issues: string[] = [];
 
     try {
-      await this.prisma.$queryRaw`SELECT 1`;
+      await this.prisma.$runCommandRaw({ ping: 1 });
     } catch (error) {
-      issues.push(`PostgreSQL is unreachable for DATABASE_URL: ${this.describeError(error)}`);
+      issues.push(`MongoDB is unreachable for DATABASE_URL: ${this.describeError(error)}`);
     }
 
     const redis = new IORedis({

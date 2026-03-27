@@ -3,12 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mongodb"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
-  id           String                @id @default(uuid())
+  id           String                @id @default(uuid()) @map("_id")
   email        String                @unique
   passwordHash String
   displayName  String?
@@ -21,7 +22,7 @@ model User {
 }
 
 model Project {
-  id          String                @id @default(uuid())
+  id          String                @id @default(uuid()) @map("_id")
   ownerId     String
   name        String
   description String?
@@ -35,7 +36,7 @@ model Project {
 }
 
 model Upload {
-  id              String              @id @default(uuid())
+  id              String              @id @default(uuid()) @map("_id")
   userId          String
   projectId       String
   originalName    String
@@ -51,7 +52,7 @@ model Upload {
 }
 
 model TranscriptionJob {
-  id               String              @id @default(uuid())
+  id               String              @id @default(uuid()) @map("_id")
   userId           String
   projectId        String
   uploadId         String              @unique
@@ -75,7 +76,7 @@ model TranscriptionJob {
 }
 
 model TranscriptionResult {
-  id                String             @id @default(uuid())
+  id                String             @id @default(uuid()) @map("_id")
   jobId             String             @unique
   projectId         String
   tempoBpm          Float
@@ -96,7 +97,7 @@ model TranscriptionResult {
 }
 
 model SheetAsset {
-  id             String              @id @default(uuid())
+  id             String              @id @default(uuid()) @map("_id")
   resultId       String
   jobId          String
   mode           String
@@ -114,7 +115,7 @@ model SheetAsset {
 }
 
 model AnalysisFeedback {
-  id          String             @id @default(uuid())
+  id          String             @id @default(uuid()) @map("_id")
   userId      String?
   projectId   String?
   jobId       String
@@ -132,7 +133,7 @@ model AnalysisFeedback {
 }
 
 model EditedScore {
-  id           String            @id @default(uuid())
+  id           String            @id @default(uuid()) @map("_id")
   jobId        String            @unique
   scoreJson    Json
   musicxmlPath String?

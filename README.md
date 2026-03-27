@@ -24,16 +24,17 @@ Install these on the host machine before starting the app:
 - Node.js 20+
 - npm 10+
 - Python 3.11+
-- PostgreSQL running locally
+- MongoDB Atlas or another MongoDB deployment reachable via `DATABASE_URL`
 - Redis 5.0+ running locally
 - FFmpeg installed locally and available on `PATH`, or configured with `FFMPEG_PATH`
 - An `aria-amt` checkpoint file, downloaded locally and referenced by `ARIA_AMT_CHECKPOINT_PATH`
 
 ## Service expectations
 
-The app does not use Docker or cloud services.
+The app does not use Docker, and the only external service it depends on is the configured MongoDB deployment.
 
-- PostgreSQL is used by the NestJS API through `DATABASE_URL`
+- MongoDB is used by the NestJS API through `DATABASE_URL`
+- The transcriber stores its job state in the same MongoDB database
 - Redis is used by BullMQ through `REDIS_HOST` and `REDIS_PORT`
 - FFmpeg is used by the transcriber for preprocessing
 - The Python service must start successfully before the API because the API checks the transcriber health endpoint on boot
@@ -46,7 +47,7 @@ The app does not use Docker or cloud services.
    - `apps/api/.env.example` to `apps/api/.env`
    - `services/transcriber/.env.example` to `services/transcriber/.env`
    - `apps/web/.env.example` to `apps/web/.env`
-3. Confirm PostgreSQL and Redis are running locally.
+3. Confirm your MongoDB connection string and Redis are set up.
    - BullMQ requires Redis 5.0 or newer
    - If your machine already has an older Redis service on `6379`, point the API at a newer local Redis instance instead
 4. Create a Python virtual environment for the transcriber and install its dependencies:
@@ -65,10 +66,10 @@ npm install --prefix apps/api
 npm install --prefix apps/web
 ```
 
-6. Run the API migrations:
+6. Push the Prisma schema to MongoDB:
 
 ```powershell
-npm run prisma:migrate
+npm run prisma:push
 ```
 
 7. Start the services in separate terminals:
@@ -79,7 +80,7 @@ npm run dev:api
 npm run dev:web
 ```
 
-The transcriber should start first. The API will fail fast if PostgreSQL, Redis, or the transcriber are not reachable.
+The transcriber should start first. The API will fail fast if MongoDB, Redis, or the transcriber are not reachable.
 
 ## Environment variables
 
@@ -131,7 +132,7 @@ If `ffmpeg` is not on `PATH`, set `FFMPEG_PATH` in `services/transcriber/.env` t
 
 If Redis is not reachable at the configured host and port, the API will fail startup with a clear message.
 
-If PostgreSQL is not reachable at the configured `DATABASE_URL`, the API will fail startup with a clear message.
+If MongoDB is not reachable at the configured `DATABASE_URL`, the API will fail startup with a clear message.
 
 For `aria-amt`, set `ARIA_AMT_CHECKPOINT_PATH` to a local copy of the `piano-medium-double-1.0.safetensors` checkpoint before starting the transcriber. During local development on Windows, the `ARIA_AMT_BIN` path can point to `services/transcriber/.venv/Scripts/aria-amt.exe`.
 
@@ -175,7 +176,7 @@ npm run e2e:smoke
 The intended local path is:
 
 1. Upload MP3 or MP4 in the web app
-2. API saves the file locally and creates a job
+2. API stores the file in MongoDB and creates a job
 3. API enqueues the job with BullMQ
 4. API worker calls the FastAPI transcriber service
 5. Transcriber preprocesses, transcribes, tracks tempo, quantizes, splits staves, and exports MusicXML + MIDI
@@ -186,7 +187,7 @@ The intended local path is:
 ## Notes
 
 - No Docker files are used anywhere in this repo.
-- Storage is filesystem-based for development and structured so it can be swapped for object storage later.
+- Uploads and generated score assets are stored in MongoDB GridFS, with local scratch files used only as transient transcriber I/O.
 - The transcriber produces both `original` and `study-friendly` variants.
 - The editable score model is the source of truth for correction, playback, and export. MusicXML is only an export format.
 - The v1 editor intentionally focuses on practical piano correction workflow rather than full engraving completeness.

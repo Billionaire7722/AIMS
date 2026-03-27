@@ -17,13 +17,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-state_store = JobStateStore(settings.transcriber_state_dir)
+state_store = JobStateStore(settings.database_url)
 pipeline = TranscriptionPipeline(settings=settings, state_store=state_store)
 
 
 @app.on_event("startup")
 async def startup_checks():
     validate_startup(settings)
+    await state_store.initialize()
+
+
+@app.on_event("shutdown")
+async def shutdown_state_store():
+    await state_store.close()
 
 
 @app.get("/health", response_model=HealthResponse)

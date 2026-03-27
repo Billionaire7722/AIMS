@@ -12,6 +12,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    database_url: str = Field(default="", alias="DATABASE_URL")
     transcriber_port: int = Field(default=8001, alias="TRANSCRIBER_PORT")
     upload_dir: Path = Field(default=Path("../../uploads"), alias="UPLOAD_DIR")
     generated_assets_dir: Path = Field(default=Path("../../generated-assets"), alias="GENERATED_ASSETS_DIR")
@@ -20,10 +21,6 @@ class Settings(BaseSettings):
     api_base_url: str = Field(default="http://127.0.0.1:4000", alias="API_BASE_URL")
     aria_amt_bin: str = Field(default="aria-amt", alias="ARIA_AMT_BIN")
     aria_amt_checkpoint_path: str = Field(default="", alias="ARIA_AMT_CHECKPOINT_PATH")
-
-    @property
-    def transcriber_state_dir(self) -> Path:
-        return self.generated_assets_dir / "transcriber-state"
 
 
 @lru_cache(maxsize=1)

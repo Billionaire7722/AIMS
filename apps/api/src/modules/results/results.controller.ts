@@ -20,7 +20,8 @@ export class ResultsController {
     const asset = await this.resultsService.getAsset(jobId, "musicxml", mode);
     res.setHeader("Content-Type", asset.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${asset.downloadName}"`);
-    return this.storage.openGeneratedStream(asset.storagePath).pipe(res);
+    const stream = await this.storage.openGeneratedStream(asset.storagePath);
+    return stream.pipe(res);
   }
 
   @Get(":jobId/midi")
@@ -28,7 +29,8 @@ export class ResultsController {
     const asset = await this.resultsService.getAsset(jobId, "midi", mode);
     res.setHeader("Content-Type", asset.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${asset.downloadName}"`);
-    return this.storage.openGeneratedStream(asset.storagePath).pipe(res);
+    const stream = await this.storage.openGeneratedStream(asset.storagePath);
+    return stream.pipe(res);
   }
 
   @Get(":jobId/raw-notes")
@@ -36,7 +38,8 @@ export class ResultsController {
     const asset = await this.resultsService.getAsset(jobId, "raw-notes", mode);
     res.setHeader("Content-Type", asset.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${asset.downloadName}"`);
-    return this.storage.openGeneratedStream(asset.storagePath).pipe(res);
+    const stream = await this.storage.openGeneratedStream(asset.storagePath);
+    return stream.pipe(res);
   }
 
   @Get(":jobId/editor-score")
@@ -54,7 +57,8 @@ export class ResultsController {
     const asset = await this.resultsService.getEditableScoreAsset(jobId, "musicxml");
     res.setHeader("Content-Type", asset.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${asset.downloadName}"`);
-    return this.storage.openGeneratedStream(asset.storagePath).pipe(res);
+    const stream = await this.storage.openGeneratedStream(asset.storagePath);
+    return stream.pipe(res);
   }
 
   @Get(":jobId/editor-score/midi")
@@ -62,6 +66,7 @@ export class ResultsController {
     const asset = await this.resultsService.getEditableScoreAsset(jobId, "midi");
     res.setHeader("Content-Type", asset.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${asset.downloadName}"`);
-    return this.storage.openGeneratedStream(asset.storagePath).pipe(res);
+    const stream = await this.storage.openGeneratedStream(asset.storagePath);
+    return stream.pipe(res);
   }
 }

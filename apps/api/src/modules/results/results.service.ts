@@ -174,8 +174,8 @@ export class ResultsService {
     const exportRoot = `edited-scores/${jobId}`;
     const musicxmlPath = `${exportRoot}/score.musicxml`;
     const midiPath = `${exportRoot}/score.mid`;
-    await this.storage.saveGeneratedText(musicxmlPath, scoreToMusicXml(normalized));
-    await this.storage.saveGeneratedBuffer(midiPath, Buffer.from(scoreToMidiBytes(normalized)));
+    await this.storage.saveGeneratedText(musicxmlPath, scoreToMusicXml(normalized), "application/vnd.recordare.musicxml+xml");
+    await this.storage.saveGeneratedBuffer(midiPath, Buffer.from(scoreToMidiBytes(normalized)), "audio/midi");
 
     const saved = await this.prisma.editedScore.upsert({
       where: { jobId },

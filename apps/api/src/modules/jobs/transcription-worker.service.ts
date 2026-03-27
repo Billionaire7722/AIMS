@@ -4,6 +4,7 @@ import { PrismaService } from "../../prisma/prisma.service.js";
 import { LocalStorageService } from "../../storage/storage.service.js";
 import { TranscriberClientService } from "../../transcriber/transcriber-client.service.js";
 import fs from "node:fs/promises";
+import path from "node:path";
 import { getAppEnv } from "../../runtime/app-env.js";
 
 @Injectable()
@@ -48,46 +49,54 @@ export class TranscriptionWorkerService implements OnModuleInit, OnModuleDestroy
     if (!job) {
       throw new Error(`Transcription job ${jobId} not found.`);
     }
+    const uploadPath = await this.storage.resolveUploadPath(job.upload.storagePath);
+    const generatedRoot = this.storage.resolveGeneratedPath("");
+    const jobOutputDir = path.join(generatedRoot, job.id);
     await this.updateJob(job.id, { status: "processing", progress: 10, startedAt: new Date() });
-    const startResponse = await this.transcriberClient.startJob({
-      jobId: job.id,
-      uploadPath: this.storage.resolveUploadPath(job.upload.storagePath),
-      uploadFileName: job.upload.originalName,
-      outputRoot: this.storage.resolveGeneratedPath(""),
-      mode: job.mode,
-    });
-    await this.updateJob(job.id, {
-      transcriberJobId: startResponse.id,
-      progress: 15,
-      status: "processing",
-    });
-    while (true) {
-      const status = await this.transcriberClient.getJobStatus(startResponse.id);
-      await this.updateJob(job.id, {
-        status: status.status,
-        progress: status.progress,
-        errorMessage: status.errorMessage ?? null,
+    try {
+      const startResponse = await this.transcriberClient.startJob({
+        jobId: job.id,
+        uploadPath,
+        uploadFileName: job.upload.originalName,
+        outputRoot: generatedRoot,
+        mode: job.mode,
       });
-      if (status.status === "completed") {
-        if (!status.result) {
-          throw new Error("Transcriber completed without a result payload.");
-        }
-        await this.persistResult(job.id, status.result);
+      await this.updateJob(job.id, {
+        transcriberJobId: startResponse.id,
+        progress: 15,
+        status: "processing",
+      });
+      while (true) {
+        const status = await this.transcriberClient.getJobStatus(startResponse.id);
         await this.updateJob(job.id, {
-          status: "completed",
-          progress: 100,
-          finishedAt: new Date(),
+          status: status.status,
+          progress: status.progress,
+          errorMessage: status.errorMessage ?? null,
         });
-        return status.result;
+        if (status.status === "completed") {
+          if (!status.result) {
+            throw new Error("Transcriber completed without a result payload.");
+          }
+          await this.persistResult(job.id, status.result, jobOutputDir);
+          await this.updateJob(job.id, {
+            status: "completed",
+            progress: 100,
+            finishedAt: new Date(),
+          });
+          return status.result;
+        }
+        if (status.status === "failed") {
+          throw new Error(status.errorMessage ?? "Transcriber job failed.");
+        }
+        await this.delay(2000);
       }
-      if (status.status === "failed") {
-        throw new Error(status.errorMessage ?? "Transcriber job failed.");
-      }
-      await this.delay(2000);
+    } finally {
+      await fs.rm(uploadPath, { force: true }).catch(() => undefined);
+      await fs.rm(jobOutputDir, { recursive: true, force: true }).catch(() => undefined);
     }
   }
 
-  private async persistResult(jobId: string, result: any) {
+  private async persistResult(jobId: string, result: any, jobOutputDir: string) {
     const job = await this.prisma.transcriptionJob.findUnique({
       where: { id: jobId },
       include: { upload: true },
@@ -161,7 +170,8 @@ export class TranscriptionWorkerService implements OnModuleInit, OnModuleDestroy
     downloadName: string,
   ) {
     const absolutePath = this.storage.resolveGeneratedPath(storagePath);
-    const stat = await fs.stat(absolutePath);
+    const buffer = await fs.readFile(absolutePath);
+    await this.storage.saveGeneratedBuffer(storagePath, buffer, mimeType);
     await this.prisma.sheetAsset.create({
       data: {
         resultId,
@@ -171,7 +181,7 @@ export class TranscriptionWorkerService implements OnModuleInit, OnModuleDestroy
         storagePath,
         mimeType,
         downloadName,
-        byteSize: stat.size,
+        byteSize: buffer.length,
       },
     });
   }

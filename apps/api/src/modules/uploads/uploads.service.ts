@@ -33,7 +33,7 @@ export class UploadsService {
     if (!project) {
       throw new NotFoundException("Project not found. Leave Project ID blank to use the local default project.");
     }
-    const saved = await this.storage.saveUploadBuffer(file.buffer, extension);
+    const saved = await this.storage.saveUploadBuffer(file.buffer, extension, file.mimetype);
     const upload = await this.prisma.upload.create({
       data: {
         userId: this.workspace.getDefaultUserId(),
